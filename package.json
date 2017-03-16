@@ -1,0 +1,38 @@
+{
+  "name": "g42beats",
+  "version": "0.0.1",
+  "private": true,
+  "description": "New Swagger API Project",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "main": "app.js",
+  "dependencies": {
+    "bcrypt": "^1.0.2",
+    "bcrypt-as-promised": "^1.1.0",
+    "body": "^5.1.0",
+    "body-parser": "^1.17.1",
+    "cookie-parser": "^1.4.3",
+    "dotenv": "^4.0.0",
+    "express": "^4.12.3",
+    "jsonwebtoken": "^7.3.0",
+    "knex": "^0.12.8",
+    "parser": "^0.1.4",
+    "pg": "^6.1.4",
+    "swagger-express-mw": "^0.1.0"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.2.0",
+    "nodemon": "^1.11.0",
+    "should": "^7.1.0",
+    "supertest": "^1.2.0"
+  },
+  "scripts": {
+    "start": "node app.js",
+    "test": "swagger project test"
+  },
+  "directories": {
+    "test": "test"
+  }
+}
