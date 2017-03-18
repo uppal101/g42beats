@@ -1,7 +1,7 @@
 swagger: "2.0"
 info:
   version: "0.0.1"
-  title: Hello World App
+  title: g42beats
 # during dev, should point to your local machine
 host: localhost:10010
 # basePath prefixes all resource paths 
@@ -18,43 +18,128 @@ consumes:
 produces:
   - application/json
 paths:
-  /hello:
+  /groups/{gid}/users
     # binds a127 app logic to a route
-    x-swagger-router-controller: hello_world
+    x-swagger-router-controller: users
     get:
-      description: Returns 'Hello' to the caller
+      summary: Get all users that belong to a certain group
+      description: Returns a list of all the users.
       # used as the method name of the controller
-      operationId: hello
+      operationId: getUsersInGroup
       parameters:
-        - name: name
-          in: query
-          description: The name of the person to whom to say hello
-          required: false
-          type: string
+        - name: gid
+          in: path
+          description: Return a group associated with that id
+          type: integer
       responses:
         "200":
-          description: Success
+          description: Got list of all users in group
           schema:
             # a pointer to a definition
-            $ref: "#/definitions/HelloWorldResponse"
+            $ref: "#/definitions/UserListFromGroup"
         # responses may fall through to errors
         default:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+            
+  /groups/{gid}/users/{id}
+    # binds a127 app logic to a route
+    x-swagger-router-controller: users
+    get:
+      summary: Get individual user that belongs to a certain group
+      description: Returns a single user.
+      # used as the method name of the controller
+      operationId: getSingleUserInGroup
+      parameters:
+        - name: gid
+          in: path
+          description: Return a group associated with that id
+          required: true
+          type: integer
+        - name: id
+          in: path
+          description: Return an individual user associated with that id
+          required: true
+          type: integer
+      responses:
+        "200":
+          description: Got individual user
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/User"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    delete:
+      summary: Delete an individual user that belongs to a certain group
+      description: Deletes a single user.
+      # used as the method name of the controller
+      operationId: deleteSingleUserInGroup
+      parameters:
+        - name: gid
+          in: path
+          description: Return a group associated with that id
+          required: true
+          type: integer
+        - name: id
+          in: path
+          description: Return an individual user associated with that id
+          required: true
+          type: integer
+      responses:
+        "204":
+          description: User deleted
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/User"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
   /swagger:
     x-swagger-pipe: swagger_raw
 # complex objects have schema definitions
 definitions:
-  HelloWorldResponse:
-    required:
-      - message
-    properties:
-      message:
-        type: string
-  ErrorResponse:
-    required:
-      - message
-    properties:
-      message:
-        type: string
+UserListFromGroup:
+  description: "An array of all the users in a specific group"
+  required:
+    - users
+  properties:
+    users:
+      type: array
+      items: 
+      $ref: "#/definitions/User"
+User:
+  description: "An object with user information"
+  required:
+    -user_id
+    -user_name
+    -password
+    -created_at
+    -updated_at
+  properties:
+    user_id:
+      type: "integer"
+      description: "Id for user"
+    user_name:
+      type: "string"
+      decription: "Clients username to login"
+    password:
+      type: "string"
+      description: "Clients password to login"
+    created_at:
+      type: "string"
+      format: "date-time"
+      description: "Timestamp when the user was created. Set by server"
+    updated_at:
+      type: "string"
+      format: "date-time"
+      description: "Timestamp when the user was updated. Set by server"
+  Group:
+  
+      
