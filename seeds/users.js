@@ -5,98 +5,98 @@ exports.seed = function(knex, Promise) {
             // Inserts seed entries
             return knex('users').insert([
               {
-                    user_id: 1,
+                    id: 1,
                     user_name: 'AlexKrawiec',
                     hashed_password:'$2a$12$nPITELk5hJbSf3Ec2ijKseG83BOoh4qUEWujlaTS2sO56iLKf4cfy',//g42beats
                     created_at: new Date(),
                     updated_at: new Date()
                 },
                 {
-                  user_id: 2,
+                  id: 2,
                   user_name: 'SashaBerkowitz',
                   hashed_password:'$2a$12$nPITELk5hJbSf3Ec2ijKseG83BOoh4qUEWujlaTS2sO56iLKf4cfy',//g42beats
                   created_at: new Date(),
                   updated_at: new Date()
                 },
                 {
-                  user_id: 3,
+                  id: 3,
                   user_name: 'MichaelMartinez',
                   hashed_password:'$2a$12$nPITELk5hJbSf3Ec2ijKseG83BOoh4qUEWujlaTS2sO56iLKf4cfy',//g42beats
                   created_at: new Date(),
                   updated_at: new Date()
                 },
                 {
-                  user_id: 4,
+                  id: 4,
                   user_name: 'SanjeetUppal',
                   hashed_password:'$2a$12$nPITELk5hJbSf3Ec2ijKseG83BOoh4qUEWujlaTS2sO56iLKf4cfy',//g42beats
                   created_at: new Date(),
                   updated_at: new Date()
                 },
                 {
-                  user_id: 5,
+                  id: 5,
                   user_name: 'KevinLam',
                   hashed_password:'$2a$12$nPITELk5hJbSf3Ec2ijKseG83BOoh4qUEWujlaTS2sO56iLKf4cfy',//g42beats
                   created_at: new Date(),
                   updated_at: new Date()
                 },
                 {
-                  user_id: 6,
+                  id: 6,
                   user_name: 'MartyYee',
                   hashed_password:'$2a$12$nPITELk5hJbSf3Ec2ijKseG83BOoh4qUEWujlaTS2sO56iLKf4cfy',//g42beats
                   created_at: new Date(),
                   updated_at: new Date()
                 },
                 {
-                  user_id: 7,
+                  id: 7,
                   user_name: 'MaryLai',
                   hashed_password:'$2a$12$nPITELk5hJbSf3Ec2ijKseG83BOoh4qUEWujlaTS2sO56iLKf4cfy',//g42beats
                   created_at: new Date(),
                   updated_at: new Date()
                 },
                 {
-                  user_id: 8,
+                  id: 8,
                   user_name: 'MattMuhr',
                   hashed_password:'$2a$12$nPITELk5hJbSf3Ec2ijKseG83BOoh4qUEWujlaTS2sO56iLKf4cfy',//g42beats
                   created_at: new Date(),
                   updated_at: new Date()
                 },
                 {
-                  user_id: 9,
+                  id: 9,
                   user_name: 'DanielGardner',
                   hashed_password:'$2a$12$nPITELk5hJbSf3Ec2ijKseG83BOoh4qUEWujlaTS2sO56iLKf4cfy',//g42beats
                   created_at: new Date(),
                   updated_at: new Date()
                 },
                 {
-                  user_id: 10,
+                  id: 10,
                   user_name: 'RyanThissen',
                   hashed_password:'$2a$12$nPITELk5hJbSf3Ec2ijKseG83BOoh4qUEWujlaTS2sO56iLKf4cfy',//g42beats
                   created_at: new Date(),
                   updated_at: new Date()
                 },
                 {
-                  user_id: 11,
+                  id: 11,
                   user_name: 'ThomasStang',
                   hashed_password:'$2a$12$nPITELk5hJbSf3Ec2ijKseG83BOoh4qUEWujlaTS2sO56iLKf4cfy',//g42beats
                   created_at: new Date(),
                   updated_at: new Date()
                 },
                 {
-                  user_id: 12,
+                  id: 12,
                   user_name: 'IvonneTerrero',
                   hashed_password:'$2a$12$nPITELk5hJbSf3Ec2ijKseG83BOoh4qUEWujlaTS2sO56iLKf4cfy',//g42beats
                   created_at: new Date(),
                   updated_at: new Date()
                 },
                 {
-                  user_id: 13,
+                  id: 13,
                   user_name: 'ReidDelahunt',
                   hashed_password:'$2a$12$nPITELk5hJbSf3Ec2ijKseG83BOoh4qUEWujlaTS2sO56iLKf4cfy',//g42beats
                   created_at: new Date(),
                   updated_at: new Date()
                 },
                 {
-                  user_id: 14,
+                  id: 14,
                   user_name: 'AomSithanant',
                   hashed_password:'$2a$12$nPITELk5hJbSf3Ec2ijKseG83BOoh4qUEWujlaTS2sO56iLKf4cfy',//g42beats
                   created_at: new Date(),
@@ -104,7 +104,7 @@ exports.seed = function(knex, Promise) {
                 }
             ])
             .then(() => {
-                return knex.raw("SELECT setval('users_user_id_seq', (SELECT MAX(user_id) FROM users))");
+                return knex.raw("SELECT setval('users_id_seq', (SELECT MAX(id) FROM users))");
             });
         });
 };
