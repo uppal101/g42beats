@@ -3,7 +3,8 @@ exports.seed = function(knex, Promise) {
     return knex('groups').del()
         .then(function() {
             // Inserts seed entries
-            return knex('groups').insert([{
+            return knex('groups').insert([
+                {
                     id: 1,
                     group_name: 'g42'
                 }
