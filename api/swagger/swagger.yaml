@@ -1,12 +1,13 @@
+
 swagger: "2.0"
 info:
   version: "0.0.1"
   title: g42beats
 # during dev, should point to your local machine
 host: localhost:10010
-# basePath prefixes all resource paths 
+# basePath prefixes all resource paths
 basePath: /
-# 
+#
 schemes:
   # tip: remove http to make production-grade
   - http
@@ -18,9 +19,9 @@ consumes:
 produces:
   - application/json
 paths:
-  /groups/{gid}/users
+   /groups/{gid}/users:
     # binds a127 app logic to a route
-    x-swagger-router-controller: users
+    x-swagger-router-controller: "Default"
     get:
       summary: Get all users that belong to a certain group
       description: Returns a list of all the users.
@@ -35,85 +36,77 @@ paths:
         "200":
           description: Got list of all users in group
           schema:
+            type: array
+            item:
             # a pointer to a definition
-            $ref: "#/definitions/UserListFromGroup"
+              $ref: "#/definitions/User"
         # responses may fall through to errors
         default:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-            
-  /groups/{gid}/users/{id}
-    # binds a127 app logic to a route
-    x-swagger-router-controller: users
-    get:
-      summary: Get individual user that belongs to a certain group
-      description: Returns a single user.
-      # used as the method name of the controller
-      operationId: getSingleUserInGroup
-      parameters:
-        - name: gid
-          in: path
-          description: Return a group associated with that id
-          required: true
-          type: integer
-        - name: id
-          in: path
-          description: Return an individual user associated with that id
-          required: true
-          type: integer
-      responses:
-        "200":
-          description: Got individual user
-          schema:
-            # a pointer to a definition
-            $ref: "#/definitions/User"
-        # responses may fall through to errors
-        default:
-          description: Error
-          schema:
-            $ref: "#/definitions/ErrorResponse"
-    delete:
-      summary: Delete an individual user that belongs to a certain group
-      description: Deletes a single user.
-      # used as the method name of the controller
-      operationId: deleteSingleUserInGroup
-      parameters:
-        - name: gid
-          in: path
-          description: Return a group associated with that id
-          required: true
-          type: integer
-        - name: id
-          in: path
-          description: Return an individual user associated with that id
-          required: true
-          type: integer
-      responses:
-        "204":
-          description: User deleted
-          schema:
-            # a pointer to a definition
-            $ref: "#/definitions/User"
-        # responses may fall through to errors
-        default:
-          description: Error
-          schema:
-            $ref: "#/definitions/ErrorResponse"
-
-  /swagger:
-    x-swagger-pipe: swagger_raw
+  # - /groups/{gid}/users/{id}:
+  #   # binds a127 app logic to a route
+  #   x-swagger-router-controller: users
+  #   get:
+  #     summary: Get individual user that belongs to a certain group
+  #     description: Returns a single user.
+  #     # used as the method name of the controller
+  #     operationId: getSingleUserInGroup
+  #     parameters:
+  #       - name: gid
+  #         in: path
+  #         description: Return a group associated with that id
+  #         required: true
+  #         type: integer
+  #       - name: id
+  #         in: path
+  #         description: Return an individual user associated with that id
+  #         required: true
+  #         type: integer
+  #     responses:
+  #       "200":
+  #         description: Got individual user
+  #         schema:
+  #           # a pointer to a definition
+  #           $ref: "#/definitions/User"
+  #       # responses may fall through to errors
+  #       default:
+  #         description: Error
+  #         schema:
+  #           $ref: "#/definitions/ErrorResponse"
+  #   delete:
+  #     summary: Delete an individual user that belongs to a certain group
+  #     description: Deletes a single user.
+  #     # used as the method name of the controller
+  #     operationId: deleteSingleUserInGroup
+  #     parameters:
+  #       - name: gid
+  #         in: path
+  #         description: Return a group associated with that id
+  #         required: true
+  #         type: integer
+  #       - name: id
+  #         in: path
+  #         description: Return an individual user associated with that id
+  #         required: true
+  #         type: integer
+  #     responses:
+  #       "204":
+  #         description: User deleted
+  #         schema:
+  #           # a pointer to a definition
+  #           $ref: "#/definitions/User"
+  #       # responses may fall through to errors
+  #       default:
+  #         description: Error
+  #         schema:
+  #           $ref: "#/definitions/ErrorResponse"
+# THIS MIGHT NEED FIXING TODO
+/swagger:
+  x-swagger-pipe: swagger_raw
 # complex objects have schema definitions
 definitions:
-UserListFromGroup:
-  description: "An array of all the users in a specific group"
-  required:
-    - users
-  properties:
-    users:
-      type: array
-      items: 
-      $ref: "#/definitions/User"
 User:
   description: "An object with user information"
   required:
@@ -134,12 +127,3 @@ User:
       description: "Clients password to login"
     created_at:
       type: "string"
-      format: "date-time"
-      description: "Timestamp when the user was created. Set by server"
-    updated_at:
-      type: "string"
-      format: "date-time"
-      description: "Timestamp when the user was updated. Set by server"
-  Group:
-  
-      

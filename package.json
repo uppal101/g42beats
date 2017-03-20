@@ -26,7 +26,8 @@
     "mocha": "^3.2.0",
     "nodemon": "^1.11.0",
     "should": "^7.1.0",
-    "supertest": "^1.2.0"
+    "supertest": "^1.2.0",
+    "yaml-lint": "0.0.4"
   },
   "scripts": {
     "start": "node app.js",
