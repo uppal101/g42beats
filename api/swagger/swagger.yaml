@@ -21,34 +21,85 @@ produces:
 paths:
   /users/{id}:
     get:
-      description: Returns a user based on the specific id. The user must be authorized to access.
+      description: Returns a user name based on the specific id. The user must be authorized to access.
       operationId: getUserById
-      produces:
+      produces: 
       - application/json
       parameters:
       - name: id
         in: path
-        description: user with given id to fetch
+        description: user name with given id to fetch
         required: true
         type: integer
         format: int64
       responses:
         "200":
           description: Users response
-          schema:
-            $ref: "#/definitions/user"
-        default:
+          schema: 
+            $ref: "#/definitions/user_name"
+        default:  
           description: unexpected error
           schema:
             $ref: "#/definitions/errorModel"
-definitions:
-  user:
-    type: object
+            
+  /users/{id}/playlist:
+    get:
+      description: Returns the list of songs that belong to a user with the specified id.
+      operationId: getUserPlaylistByUserId
+      produces: 
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: Fetch playlist with songs associated with given user id.
+        required: true
+        type: integer
+        format: int64
+      responses:
+        "200":
+          description: Users response
+          schema: 
+            $ref: "#/definitions/playlist"
+        default:  
+          description: unexpected error
+          schema:
+            $ref: "#/definitions/errorModel"
+definitions: 
+  user_name:
+    type: string
     required:
     - username
     properties:
       username:
         type: string
+  playlist:
+    required:
+    - songs
+    properties:
+      songs:
+        type: array
+        items:
+          $ref: '#/definitions/song'
+  song:
+    type: object
+    required:
+    - songid
+    - userid
+    - songName
+    - artistname
+    properties:
+      songid:
+        type: integer
+        description: This id is associated with a particular song
+      userid: 
+        type: integer 
+        description: This id is associated with a particular user
+      songName:
+        type: string
+        description: The name of the song
+      artistname:  
+        type: string
+        description: Artist name
   errorModel:
     type: object
     required:
@@ -59,12 +110,11 @@ definitions:
         type: integer
         format: int64
       message:
-        type: string
+        type: string      
+       
       
-
-
-
-
+      
+      
 
 
 
