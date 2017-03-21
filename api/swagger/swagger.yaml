@@ -60,20 +60,101 @@ paths:
         format: int64
       - name: id
         in: path
+
         description: Return an individual associated with that id
+
         required: true
         type: integer
         format: int64
       responses:
         "200":
           description: Got individual user
-          schema:
-            $ref: "#/definitions/user"
-        default:
+
+          schema: 
+            $ref: "#/definitions/user_name"
+        default:  
           description: unexpected error
           schema:
             $ref: "#/definitions/errorModel"
-    
+            
+  /users:
+    x-swagger-router-controller: createNewUser
+    post:
+      description: Creates a new user in the users list.
+      operationId: createUser
+      produces: 
+        - application/json
+      parameters:
+      - name: newUser
+        in: body
+        description: Adds new user to database.
+        required: true
+        # type: object
+        schema:
+          $ref: "#/definitions/adduser"
+      responses:
+        "200":
+          description: New user response
+          schema: 
+            $ref: "#/definitions/adduser"
+        default:  
+          description: unexpected error
+          schema:
+            $ref: "#/definitions/errorModel"
+              
+  /users/{id}/playlist:
+    x-swagger-router-controller: userPersonalPlaylist
+    get:
+      description: Returns the list of songs that belong to a user with the specified id.
+      operationId: getUserPlaylistByUserId
+      produces: 
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: Fetch playlist with songs associated with signed in user id.
+        required: true
+        type: integer
+        format: int64
+      responses:
+        "200":
+          description: Users response
+          schema: 
+            $ref: "#/definitions/playlist"
+        default:  
+          description: unexpected error
+          schema:
+            $ref: "#/definitions/errorModel"
+            
+  /groups/{gid}/{id}/playlist:
+    x-swagger-router-controller: userPlaylistByUserId
+    get:
+      description: Returns the all the songs associated with a user in a group that the signed in user is a part of. The id is associated with the user whose playlist we are seeing. 
+      operationId: getUserPlaylistByGroupIdandUserId
+      produces: 
+      - application/json
+      parameters: 
+      - name: gid
+        in: path 
+        description: Produces an a list of users in the given group.
+        required: true
+        type: integer
+        format: int64
+      - name: id
+        in: path
+        description: Fetches the user associated with given user id.
+        required: true
+        type: integer
+        format: int64
+      responses:
+        "200":
+          description: Users response
+          schema: 
+            $ref: "#/definitions/playlist"
+        default:  
+          description: unexpected error
+          schema:
+            $ref: "#/definitions/errorModel"  
     delete:
       description: Delete an individual user that belongs to a certain group.
       operationId: deleteSingleUserInGroup
@@ -237,26 +318,39 @@ paths:
             $ref: "#/definitions/errorModel"
             
 definitions:
-  user:
+  # user:
+  #   type: object
+  #   required:
+  #   - user_id
+  #   - user_name
+  #   - password
+  #   - created_at
+  #   - updated_at
+  #   properties:
+  #     user_id:
+  #       type: "integer"
+  #     user_name:
+  #       type: "string"
+  #     password:
+  #       type: "string"
+  #     created_at:
+  #       type: "string"
+  #     updated_at:
+  #       type: "string"
+  adduser:
     type: object
     required:
-    - user_id
     - user_name
     - password
-    - created_at
-    - updated_at
+    - group_name
     properties:
-      user_id:
-        type: "integer"
       user_name:
         type: "string"
       password:
         type: "string"
-      created_at:
+      group_name: 
         type: "string"
-      updated_at:
-        type: "string"
-        
+
   user_name:
     type: string
     required:
@@ -272,7 +366,16 @@ definitions:
     properties:
       group_name:
         type: "string"
-        
+            
+  playlist:
+    required:
+    - songs
+    properties:
+      songs:
+        type: array
+        items:
+          $ref: '#/definitions/song'
+
   song:
     type: object
     required:
@@ -304,6 +407,7 @@ definitions:
       song:
         type: string
         
+
   errorModel:
     type: object
     required:
@@ -314,4 +418,6 @@ definitions:
         type: integer
         format: int64
       message:
-        type: string
+        type: string      
+       
+      
