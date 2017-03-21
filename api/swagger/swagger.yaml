@@ -43,6 +43,7 @@ paths:
             $ref: "#/definitions/errorModel"
             
   /users:
+    x-swagger-router-controller: createNewUser
     post:
       description: Creates a new user in the users list.
       operationId: createUser
@@ -65,8 +66,10 @@ paths:
           description: unexpected error
           schema:
             $ref: "#/definitions/errorModel"
+            
       
   /users/{id}/playlist:
+    x-swagger-router-controller: userPersonalPlaylist
     get:
       description: Returns the list of songs that belong to a user with the specified id.
       operationId: getUserPlaylistByUserId
@@ -90,6 +93,7 @@ paths:
             $ref: "#/definitions/errorModel"
             
   /groups/{gid}/{id}/playlist:
+    x-swagger-router-controller: userPlaylistByUserId
     get:
       description: Returns the all the songs associated with a user in a group that the signed in user is a part of. The id is associated with the user whose playlist we are seeing. 
       operationId: getUserPlaylistByGroupIdandUserId
