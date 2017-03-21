@@ -23,7 +23,7 @@ paths:
     get:
       description: Returns a user name based on the specific id. The user must be authorized to access.
       operationId: getUserById
-      produces:
+      produces: 
       - application/json
       parameters:
       - name: id
@@ -35,18 +35,43 @@ paths:
       responses:
         "200":
           description: Users response
-          schema:
+          schema: 
             $ref: "#/definitions/user_name"
-        default:
+        default:  
           description: unexpected error
           schema:
             $ref: "#/definitions/errorModel"
-
+            
+  /users:
+    post:
+      description: Creates a new user in the users list.
+      operationId: createUser
+      produces: 
+      - application/json
+      parameters:
+        name: user_name
+        password: password
+        in: body
+        description: new user to add to database.
+        required: true
+        type: object
+        schema:
+          $ref: "#/definitions/adduser"
+      responses:
+        "200":
+          description: New user response
+          schema: 
+            $ref: "#/definitions/adduser"
+        default:  
+          description: unexpected error
+          schema:
+            $ref: "#/definitions/errorModel"
+      
   /users/{id}/playlist:
     get:
       description: Returns the list of songs that belong to a user with the specified id.
       operationId: getUserPlaylistByUserId
-      produces:
+      produces: 
       - application/json
       parameters:
       - name: id
@@ -58,22 +83,22 @@ paths:
       responses:
         "200":
           description: Users response
-          schema:
+          schema: 
             $ref: "#/definitions/playlist"
-        default:
+        default:  
           description: unexpected error
           schema:
             $ref: "#/definitions/errorModel"
-
+            
   /groups/{gid}/{id}/playlist:
     get:
-      description: Returns the all the songs associated with a user in a group that the signed in user is a part of. The id is associated with the user whose playlist we are seeing.
+      description: Returns the all the songs associated with a user in a group that the signed in user is a part of. The id is associated with the user whose playlist we are seeing. 
       operationId: getUserPlaylistByGroupIdandUserId
-      produces:
+      produces: 
       - application/json
-      parameters:
+      parameters: 
       - name: gid
-        in: path
+        in: path 
         description: Produces an a list of users in the given group.
         required: true
         type: integer
@@ -87,14 +112,43 @@ paths:
       responses:
         "200":
           description: Users response
-          schema:
+          schema: 
             $ref: "#/definitions/playlist"
-        default:
+        default:  
           description: unexpected error
           schema:
             $ref: "#/definitions/errorModel"
-
+            
 definitions:
+  user:
+    type: object
+    required:
+    - user_id
+    - user_name
+    - password
+    - created_at
+    - updated_at
+    properties:
+      user_id:
+        type: "integer"
+      user_name:
+        type: "string"
+      password:
+        type: "string"
+      created_at:
+        type: "string"
+      updated_at:
+        type: "string"
+  adduser:
+    type: object
+    required:
+    - user_name
+    - password
+    properties:
+      user_name:
+        type: "string"
+      password:
+        type: "string"
   user_name:
     type: string
     required:
@@ -108,7 +162,7 @@ definitions:
   #   - gid
   #   properties:
   #     gid:
-  #       type: integer
+  #       type: integer      
   playlist:
     required:
     - songs
@@ -128,13 +182,13 @@ definitions:
       songid:
         type: integer
         description: This id is associated with a particular song
-      userid:
-        type: integer
+      userid: 
+        type: integer 
         description: This id is associated with a particular user
       songName:
         type: string
         description: The name of the song
-      artistname:
+      artistname:  
         type: string
         description: Artist name
   errorModel:
@@ -147,11 +201,11 @@ definitions:
         type: integer
         format: int64
       message:
-        type: string
-
-
-
-
+        type: string      
+       
+      
+      
+      
 
 
 
