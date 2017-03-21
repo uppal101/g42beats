@@ -19,6 +19,7 @@ produces:
 - application/json
 paths:
   /groups/{gid}/users:
+    x-swagger-router-controller: groupUsers
     get:
       description: Gets all users that belong to a certain group.
       operationId: getUsersInGroup
@@ -44,6 +45,7 @@ paths:
             $ref: "#/definitions/errorModel"
             
   /groups/{gid}/users/{id}:
+    x-swagger-router-controller: groupUser
     get:
       description: Gets an individual user that belongs to a certain group.
       operationId: getSingleUserInGroup
@@ -101,6 +103,7 @@ paths:
             $ref: "#/definitions/errorModel"
             
   /users/{id}/groups:
+    x-swagger-router-controller: userGroups
     get:
       description: Gets all groups that belong to a certain user.
       operationId: getGroupsPerUser
@@ -126,6 +129,7 @@ paths:
             $ref: "#/definitions/errorModel"
   
   /groups/{gid}/playlist:
+    x-swagger-router-controller: compiledPlaylist
     get:
       description: Gets compiled playlist for group selected.
       operationId: getGroupCompiledPlaylist
@@ -151,6 +155,7 @@ paths:
             $ref: "#/definitions/errorModel"
             
   /users/{id}/playlist/songs:
+    x-swagger-router-controller: addSong
     put:
       description: Add a song to authorized user's personal playlist.
       operationId: addSong
@@ -180,6 +185,7 @@ paths:
             $ref: "#/definitions/errorModel"
     
   /users/{id}/playlist/songs/{sid}:
+    x-swagger-router-controller: deleteSong
     delete:
       description: Delete a song to authorized user's personal playlist.
       operationId: deleteSong
@@ -209,6 +215,7 @@ paths:
             $ref: "#/definitions/errorModel"
             
   /g42/login:
+    x-swagger-router-controller: login
     post:
       description: User authentication via sign-in.
       operationId: userSignIn
