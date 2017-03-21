@@ -47,14 +47,13 @@ paths:
       description: Creates a new user in the users list.
       operationId: createUser
       produces: 
-      - application/json
+        - application/json
       parameters:
-        name: user_name
-        password: password
+      - name: newUser
         in: body
-        description: new user to add to database.
+        description: Adds new user to database.
         required: true
-        type: object
+        # type: object
         schema:
           $ref: "#/definitions/adduser"
       responses:
@@ -120,34 +119,37 @@ paths:
             $ref: "#/definitions/errorModel"
             
 definitions:
-  user:
-    type: object
-    required:
-    - user_id
-    - user_name
-    - password
-    - created_at
-    - updated_at
-    properties:
-      user_id:
-        type: "integer"
-      user_name:
-        type: "string"
-      password:
-        type: "string"
-      created_at:
-        type: "string"
-      updated_at:
-        type: "string"
+  # user:
+  #   type: object
+  #   required:
+  #   - user_id
+  #   - user_name
+  #   - password
+  #   - created_at
+  #   - updated_at
+  #   properties:
+  #     user_id:
+  #       type: "integer"
+  #     user_name:
+  #       type: "string"
+  #     password:
+  #       type: "string"
+  #     created_at:
+  #       type: "string"
+  #     updated_at:
+  #       type: "string"
   adduser:
     type: object
     required:
     - user_name
     - password
+    - group_name
     properties:
       user_name:
         type: "string"
       password:
+        type: "string"
+      group_name: 
         type: "string"
   user_name:
     type: string
