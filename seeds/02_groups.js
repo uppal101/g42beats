@@ -6,7 +6,9 @@ exports.seed = function(knex, Promise) {
             return knex('groups').insert([
                 {
                     id: 1,
-                    group_name: 'g42'
+                    group_name: 'g42',
+                    created_at: new Date(),
+                    updated_at: new Date()
                 }
             ])
             .then(() => {

@@ -4,47 +4,120 @@ info:
   version: "0.0.1"
   title: g42beats
 # during dev, should point to your local machine
-host: localhost:10010
+host: "localhost:10010"
 # basePath prefixes all resource paths
-basePath: /
+basePath: "/"
 #
 schemes:
   # tip: remove http to make production-grade
-  - http
-  - https
+- "http"
+  # - https
 # format of bodies a client can send (Content-Type)
 consumes:
-  - application/json
+- application/json
 # format of the responses to the client (Accepts)
 produces:
-  - application/json
+- application/json
 paths:
-   /groups/{gid}/users:
-    # binds a127 app logic to a route
-    x-swagger-router-controller: "Default"
+  /users/{id}:
     get:
-      summary: Get all users that belong to a certain group
-      description: Returns a list of all the users.
-      # used as the method name of the controller
-      operationId: getUsersInGroup
+      description: Returns a user based on the specific id. The user must be authorized to access.
+      operationId: getUserById
+      produces:
+      - application/json
       parameters:
-        - name: gid
-          in: path
-          description: Return a group associated with that id
-          type: integer
+      - name: id
+        in: path
+        description: user with given id to fetch
+        required: true
+        type: integer
+        format: int64
       responses:
         "200":
-          description: Got list of all users in group
+          description: Users response
           schema:
-            type: array
-            item:
-            # a pointer to a definition
-              $ref: "#/definitions/User"
-        # responses may fall through to errors
+            $ref: "#/definitions/user"
         default:
-          description: Error
+          description: unexpected error
           schema:
-            $ref: "#/definitions/ErrorResponse"
+            $ref: "#/definitions/errorModel"
+definitions:
+  user:
+    type: object
+    required:
+    - username
+    properties:
+      username:
+        type: string
+  errorModel:
+    type: object
+    required:
+    - code
+    - message
+    properties:
+      code:
+        type: integer
+        format: int64
+      message:
+        type: string
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  # /groups/{gid}/users:
+  #   # binds a127 app logic to a route
+  #   x-swagger-router-controller: "Default"
+  #   get:
+  #     summary: Get all users that belong to a certain group
+  #     description: Returns a list of all the users.
+  #     # used as the method name of the controller
+  #     operationId: getUsersInGroup
+  #     parameters:
+  #       - name: gid
+  #         in: path
+  #         description: Return a group associated with that id
+  #         type: integer
+  #     responses:
+  #       "200":
+  #         description: Got list of all users in group
+  #         schema:
+  #           type: array
+  #           item:
+  #           # a pointer to a definition
+  #             $ref: "#/definitions/User"
+  #       # responses may fall through to errors
+  #       default:
+  #         description: Error
+  #         schema:
+  #           $ref: "#/definitions/ErrorResponse"
   # - /groups/{gid}/users/{id}:
   #   # binds a127 app logic to a route
   #   x-swagger-router-controller: users
@@ -103,27 +176,27 @@ paths:
   #         schema:
   #           $ref: "#/definitions/ErrorResponse"
 # THIS MIGHT NEED FIXING TODO
-/swagger:
-  x-swagger-pipe: swagger_raw
-# complex objects have schema definitions
-definitions:
-User:
-  description: "An object with user information"
-  required:
-    -user_id
-    -user_name
-    -password
-    -created_at
-    -updated_at
-  properties:
-    user_id:
-      type: "integer"
-      description: "Id for user"
-    user_name:
-      type: "string"
-      decription: "Clients username to login"
-    password:
-      type: "string"
-      description: "Clients password to login"
-    created_at:
-      type: "string"
+# /swagger:
+#   x-swagger-pipe: swagger_raw
+# # complex objects have schema definitions
+# definitions:
+# User:
+#   description: "An object with user information"
+#   required:
+#     -user_id
+#     -user_name
+#     -password
+#     -created_at
+#     -updated_at
+#   properties:
+#     user_id:
+#       type: "integer"
+#       description: "Id for user"
+#     user_name:
+#       type: "string"
+#       decription: "Clients username to login"
+#     password:
+#       type: "string"
+#       description: "Clients password to login"
+#     created_at:
+#       type: "string"

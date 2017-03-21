@@ -550,7 +550,9 @@ exports.seed = function(knex, Promise) {
                     updated_at: new Date()
                 }
             ])
-            .then(() => {
+
+            .then((info) => {
+                console.log(info);
                 return knex.raw("SELECT setval('songs_id_seq', (SELECT MAX(id) FROM songs))");
             });
         });
