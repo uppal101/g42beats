@@ -1,3 +1,23 @@
+module.exports.getUserById = function(args, res, next) {
+  /**
+   * Returns a user name based on the specific id. The user must be authorized to access.
+   *
+   * id Long user name with given id to fetch
+   * returns user_name
+   **/
+  var examples = {};
+  examples['application/json'] = {
+  "username" : "aeiou"
+};
+  if (Object.keys(examples).length > 0) {
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(examples[Object.keys(examples)[0]] || {}, null, 2));
+  } else {
+    res.end();
+  }
+}
+
+
 module.exports.createUser = function(args, res, next) {
   /**
    * Creates a new user in the users list.
@@ -61,6 +81,8 @@ module.exports.getGroupsPerUser = function(args, res, next) {
     res.end();
   }
 }
+
+
 module.exports.addSong = function(args, res, next) {
   /**
    * Add a song to authorized user's personal playlist.
@@ -105,7 +127,7 @@ module.exports.deleteSong = function(args, res, next) {
   }
 }
 
-exports.userSignIn = function(args, res, next) {
+module.exports.userSignIn = function(args, res, next) {
   /**
    * User authentication via sign-in.
    *
@@ -124,16 +146,22 @@ exports.userSignIn = function(args, res, next) {
   }
 }
 
-exports.getUserById = function(args, res, next) {
+
+exports.deleteSingleUserInGroup = function(args, res, next) {
   /**
-   * Returns a user name based on the specific id. The user must be authorized to access.
+   * Delete an individual user that belongs to a certain group.
    *
-   * id Long user name with given id to fetch
-   * returns user_name
+   * gid Long Return a group associated with that id
+   * id Long Return an individual associated with that id
+   * returns user
    **/
   var examples = {};
   examples['application/json'] = {
-  "username" : "aeiou"
+  "password" : "aeiou",
+  "updated_at" : "aeiou",
+  "user_id" : 123,
+  "user_name" : "aeiou",
+  "created_at" : "aeiou"
 };
   if (Object.keys(examples).length > 0) {
     res.setHeader('Content-Type', 'application/json');

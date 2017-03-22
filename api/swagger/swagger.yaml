@@ -20,6 +20,7 @@ produces:
 - application/json
 paths:
   /users/{id}:
+    x-swagger-router-controller: user
     get:
       description: Returns a user name based on the specific id. The user must be authorized to access.
       operationId: getUserById
@@ -36,14 +37,14 @@ paths:
         "200":
           description: Users response
           schema:
-            $ref: "#/definitions/user_name"
+            $ref: "#/definitions/username"
         default:
           description: unexpected error
           schema:
             $ref: "#/definitions/errorModel"
 
   /users:
-    x-swagger-router-controller: createNewUser
+    x-swagger-router-controller: user
     post:
       description: Creates a new user in the users list.
       operationId: createUser
@@ -69,7 +70,7 @@ paths:
 
 
   /users/{id}/playlist:
-    x-swagger-router-controller: userPersonalPlaylist
+    x-swagger-router-controller: user
     get:
       description: Returns the list of songs that belong to a user with the specified id.
       operationId: getUserPlaylistByUserId
@@ -93,7 +94,7 @@ paths:
             $ref: "#/definitions/errorModel"
 
   /groups/{gid}/{id}/playlist:
-    x-swagger-router-controller: userPlaylistByUserId
+    x-swagger-router-controller: group
     get:
       description: Returns the all the songs associated with a user in a group that the signed in user is a part of. The id is associated with the user whose playlist we are seeing.
       operationId: getUserPlaylistByGroupIdandUserId
@@ -123,7 +124,7 @@ paths:
             $ref: "#/definitions/errorModel"
 
   /groups/{gid}/users:
-    x-swagger-router-controller: groupUsers
+    x-swagger-router-controller: group
     get:
       description: Gets all users that belong to a certain group.
       operationId: getUsersInGroup
@@ -149,7 +150,7 @@ paths:
             $ref: "#/definitions/errorModel"
 
   /groups/{gid}/users/{id}:
-    x-swagger-router-controller: groupUser
+    x-swagger-router-controller: group
     get:
       description: Gets an individual user that belongs to a certain group.
       operationId: getSingleUserInGroup
@@ -207,7 +208,7 @@ paths:
             $ref: "#/definitions/errorModel"
 
   /users/{id}/groups:
-    x-swagger-router-controller: userGroups
+    x-swagger-router-controller: user
     get:
       description: Gets all groups that belong to a certain user.
       operationId: getGroupsPerUser
@@ -233,7 +234,7 @@ paths:
             $ref: "#/definitions/errorModel"
 
   /groups/{gid}/playlist:
-    x-swagger-router-controller: compiledPlaylist
+    x-swagger-router-controller: group
     get:
       description: Gets compiled playlist for group selected.
       operationId: getGroupCompiledPlaylist
@@ -259,7 +260,7 @@ paths:
             $ref: "#/definitions/errorModel"
 
   /users/{id}/playlist/songs:
-    x-swagger-router-controller: addSong
+    x-swagger-router-controller: user
     put:
       description: Add a song to authorized user's personal playlist.
       operationId: addSong
@@ -289,7 +290,7 @@ paths:
             $ref: "#/definitions/errorModel"
 
   /users/{id}/playlist/songs/{sid}:
-    x-swagger-router-controller: deleteSong
+    x-swagger-router-controller: user
     delete:
       description: Delete a song to authorized user's personal playlist.
       operationId: deleteSong
@@ -320,8 +321,8 @@ paths:
 
 
 
-  /g42/login:
-    x-swagger-router-controller: login
+  /user/login:
+    x-swagger-router-controller: user
     post:
       description: User authentication via sign-in.
       operationId: userSignIn
@@ -331,12 +332,12 @@ paths:
         description: Username of user trying to log-in
         required: true
         schema:
-          $ref: "#/definitions/user_name"
+          $ref: "#/definitions/username"
       responses:
         "200":
           description: Logged in successfully
           schema:
-            $ref: "#/definitions/user_name"
+            $ref: "#/definitions/username"
         default:
           description: unexpected error
           schema:
@@ -416,8 +417,8 @@ definitions:
       group_name:
         type: "string"
 
-  user_name:
-    type: string
+  username:
+    type: object
     required:
     - username
     properties:
