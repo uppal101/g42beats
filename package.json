@@ -15,11 +15,15 @@
     "cookie-parser": "^1.4.3",
     "dotenv": "^4.0.0",
     "express": "^4.12.3",
+    "joi": "^10.2.2",
+    "js-yaml": "^3.8.2",
     "jsonwebtoken": "^7.3.0",
     "knex": "^0.12.8",
+    "morgan": "^1.8.1",
     "parser": "^0.1.4",
     "pg": "^6.1.4",
-    "swagger-express-mw": "^0.1.0"
+    "swagger-express-mw": "^0.1.0",
+    "swagger-tools": "^0.10.1"
   },
   "devDependencies": {
     "chai": "^3.5.0",
