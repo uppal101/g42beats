@@ -318,6 +318,8 @@ paths:
           schema:
             $ref: "#/definitions/errorModel"
 
+
+
   /g42/login:
     x-swagger-router-controller: login
     post:
