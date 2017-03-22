@@ -122,26 +122,284 @@ paths:
           schema:
             $ref: "#/definitions/errorModel"
             
+  /groups/{gid}/users:
+    x-swagger-router-controller: groupUsers
+    get:
+      description: Gets all users that belong to a certain group.
+      operationId: getUsersInGroup
+      produces:
+      - application/json
+      parameters:
+      - name: gid
+        in: path
+        description: Return a group associated with that id
+        required: true
+        type: integer
+        format: int64
+      responses:
+        "200":
+          description: Got array of users in group
+          schema:
+            type: array
+            items:
+             $ref: "#/definitions/user"
+        default:
+          description: unexpected error
+          schema:
+            $ref: "#/definitions/errorModel"
+            
+  /groups/{gid}/users/{id}:
+    x-swagger-router-controller: groupUser
+    get:
+      description: Gets an individual user that belongs to a certain group.
+      operationId: getSingleUserInGroup
+      produces:
+      - application/json
+      parameters:
+      - name: gid
+        in: path
+        description: Return a group associated with that id
+        required: true
+        type: integer
+        format: int64
+      - name: id
+        in: path
+        description: Return an individual associated with that id
+        required: true
+        type: integer
+        format: int64
+      responses:
+        "200":
+          description: Got individual user
+          schema:
+            $ref: "#/definitions/user"
+        default:
+          description: unexpected error
+          schema:
+            $ref: "#/definitions/errorModel"
+    
+    delete:
+      description: Delete an individual user that belongs to a certain group.
+      operationId: deleteSingleUserInGroup
+      produces:
+      - application/json
+      parameters:
+      - name: gid
+        in: path
+        description: Return a group associated with that id
+        required: true
+        type: integer
+        format: int64
+      - name: id
+        in: path
+        description: Return an individual associated with that id
+        required: true
+        type: integer
+        format: int64
+      responses:
+        "204":
+          description: Users deleted
+          schema:
+            $ref: "#/definitions/user"
+        default:
+          description: unexpected error
+          schema:
+            $ref: "#/definitions/errorModel"
+            
+  /users/{id}/groups:
+    x-swagger-router-controller: userGroups
+    get:
+      description: Gets all groups that belong to a certain user.
+      operationId: getGroupsPerUser
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: Returns a user associated with that id
+        required: true
+        type: integer
+        format: int64
+      responses:
+        "200":
+          description: Got array of groups that belong to user
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/groupName"
+        default:
+          description: unexpected error
+          schema:
+            $ref: "#/definitions/errorModel"
+  
+  /groups/{gid}/playlist:
+    x-swagger-router-controller: compiledPlaylist
+    get:
+      description: Gets compiled playlist for group selected.
+      operationId: getGroupCompiledPlaylist
+      produces:
+      - application/json
+      parameters:
+      - name: gid
+        in: path
+        description: Return a group associated with that id
+        required: true
+        type: integer
+        format: int64
+      responses:
+        "200":
+          description: Got compiled group playlist
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/song"
+        default:
+          description: unexpected error
+          schema:
+            $ref: "#/definitions/errorModel"
+            
+  /users/{id}/playlist/songs:
+    x-swagger-router-controller: addSong
+    put:
+      description: Add a song to authorized user's personal playlist.
+      operationId: addSong
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: Return an individual associated with that id
+        required: true
+        type: integer
+        format: int64
+      - name: song
+        in: body
+        description: Name of song with artist user wants to add
+        required: true
+        schema:
+            $ref: "#/definitions/addsong"
+      responses:
+        "200":
+          description: Added song
+          schema:
+            $ref: "#/definitions/addsong"
+        default:
+          description: unexpected error
+          schema:
+            $ref: "#/definitions/errorModel"
+    
+  /users/{id}/playlist/songs/{sid}:
+    x-swagger-router-controller: deleteSong
+    delete:
+      description: Delete a song to authorized user's personal playlist.
+      operationId: deleteSong
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: Return an individual associated with that id
+        required: true
+        type: integer
+        format: int64
+      - name: sid
+        in: path
+        description: Id associated with song selected
+        required: true
+        type: integer
+        format: int64
+      responses:
+        "204":
+          description: Got individual user
+          schema:
+            $ref: "#/definitions/song"
+        default:
+          description: unexpected error
+          schema:
+            $ref: "#/definitions/errorModel"
+            
+  /g42/login:
+    x-swagger-router-controller: login
+    post:
+      description: User authentication via sign-in.
+      operationId: userSignIn
+      parameters:
+      - name: user_name
+        in: body
+        description: Username of user trying to log-in
+        required: true
+        schema:
+          $ref: "#/definitions/user_name"
+      responses:
+        "200":
+          description: Logged in successfully
+          schema:
+            $ref: "#/definitions/user_name"
+        default:
+          description: unexpected error
+          schema:
+            $ref: "#/definitions/errorModel"
+            
 definitions:
-  # user:
-  #   type: object
-  #   required:
-  #   - user_id
-  #   - user_name
-  #   - password
-  #   - created_at
-  #   - updated_at
-  #   properties:
-  #     user_id:
-  #       type: "integer"
-  #     user_name:
-  #       type: "string"
-  #     password:
-  #       type: "string"
-  #     created_at:
-  #       type: "string"
-  #     updated_at:
-  #       type: "string"
+  user:
+    type: object
+    required:
+    - user_id
+    - user_name
+    - password
+    - created_at
+    - updated_at
+    properties:
+      user_id:
+        type: "integer"
+      user_name:
+        type: "string"
+      password:
+        type: "string"
+      created_at:
+        type: "string"
+      updated_at:
+        type: "string"
+        
+  groupName:
+    type: object
+    required:
+    - group_name
+    properties:
+      group_name:
+        type: "string"
+        
+  song:
+    type: object
+    required:
+    - songid
+    - userid
+    - songname
+    - artistname
+    properties:
+      songid: 
+        type: integer 
+        format: int64
+      userid: 
+        type: integer 
+        format: int64
+      songname:
+        type: string
+      artistname:  
+        type: string
+        
+  addsong:
+    type: object
+    required:
+    - userid
+    - song
+    properties:
+      userid: 
+        type: integer 
+        format: int64
+      song:
+        type: string
+
   adduser:
     type: object
     required:
@@ -155,6 +413,7 @@ definitions:
         type: "string"
       group_name: 
         type: "string"
+        
   user_name:
     type: string
     required:
@@ -162,13 +421,7 @@ definitions:
     properties:
       username:
         type: string
-  # gid:
-  #   type: integer
-  #   required:
-  #   - gid
-  #   properties:
-  #     gid:
-  #       type: integer      
+      
   playlist:
     required:
     - songs
@@ -177,26 +430,7 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/song'
-  song:
-    type: object
-    required:
-    - songid
-    - userid
-    - songName
-    - artistname
-    properties:
-      songid:
-        type: integer
-        description: This id is associated with a particular song
-      userid: 
-        type: integer 
-        description: This id is associated with a particular user
-      songName:
-        type: string
-        description: The name of the song
-      artistname:  
-        type: string
-        description: Artist name
+
   errorModel:
     type: object
     required:
@@ -210,140 +444,3 @@ definitions:
         type: string      
        
       
-      
-      
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  # /groups/{gid}/users:
-  #   # binds a127 app logic to a route
-  #   x-swagger-router-controller: "Default"
-  #   get:
-  #     summary: Get all users that belong to a certain group
-  #     description: Returns a list of all the users.
-  #     # used as the method name of the controller
-  #     operationId: getUsersInGroup
-  #     parameters:
-  #       - name: gid
-  #         in: path
-  #         description: Return a group associated with that id
-  #         type: integer
-  #     responses:
-  #       "200":
-  #         description: Got list of all users in group
-  #         schema:
-  #           type: array
-  #           item:
-  #           # a pointer to a definition
-  #             $ref: "#/definitions/User"
-  #       # responses may fall through to errors
-  #       default:
-  #         description: Error
-  #         schema:
-  #           $ref: "#/definitions/ErrorResponse"
-  # - /groups/{gid}/users/{id}:
-  #   # binds a127 app logic to a route
-  #   x-swagger-router-controller: users
-  #   get:
-  #     summary: Get individual user that belongs to a certain group
-  #     description: Returns a single user.
-  #     # used as the method name of the controller
-  #     operationId: getSingleUserInGroup
-  #     parameters:
-  #       - name: gid
-  #         in: path
-  #         description: Return a group associated with that id
-  #         required: true
-  #         type: integer
-  #       - name: id
-  #         in: path
-  #         description: Return an individual user associated with that id
-  #         required: true
-  #         type: integer
-  #     responses:
-  #       "200":
-  #         description: Got individual user
-  #         schema:
-  #           # a pointer to a definition
-  #           $ref: "#/definitions/User"
-  #       # responses may fall through to errors
-  #       default:
-  #         description: Error
-  #         schema:
-  #           $ref: "#/definitions/ErrorResponse"
-  #   delete:
-  #     summary: Delete an individual user that belongs to a certain group
-  #     description: Deletes a single user.
-  #     # used as the method name of the controller
-  #     operationId: deleteSingleUserInGroup
-  #     parameters:
-  #       - name: gid
-  #         in: path
-  #         description: Return a group associated with that id
-  #         required: true
-  #         type: integer
-  #       - name: id
-  #         in: path
-  #         description: Return an individual user associated with that id
-  #         required: true
-  #         type: integer
-  #     responses:
-  #       "204":
-  #         description: User deleted
-  #         schema:
-  #           # a pointer to a definition
-  #           $ref: "#/definitions/User"
-  #       # responses may fall through to errors
-  #       default:
-  #         description: Error
-  #         schema:
-  #           $ref: "#/definitions/ErrorResponse"
-# THIS MIGHT NEED FIXING TODO
-# /swagger:
-#   x-swagger-pipe: swagger_raw
-# # complex objects have schema definitions
-# definitions:
-# User:
-#   description: "An object with user information"
-#   required:
-#     -user_id
-#     -user_name
-#     -password
-#     -created_at
-#     -updated_at
-#   properties:
-#     user_id:
-#       type: "integer"
-#       description: "Id for user"
-#     user_name:
-#       type: "string"
-#       decription: "Clients username to login"
-#     password:
-#       type: "string"
-#       description: "Clients password to login"
-#     created_at:
-#       type: "string"
