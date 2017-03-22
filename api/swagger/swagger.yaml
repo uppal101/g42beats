@@ -23,7 +23,7 @@ paths:
     get:
       description: Returns a user name based on the specific id. The user must be authorized to access.
       operationId: getUserById
-      produces: 
+      produces:
       - application/json
       parameters:
       - name: id
@@ -35,19 +35,19 @@ paths:
       responses:
         "200":
           description: Users response
-          schema: 
+          schema:
             $ref: "#/definitions/user_name"
-        default:  
+        default:
           description: unexpected error
           schema:
             $ref: "#/definitions/errorModel"
-            
+
   /users:
     x-swagger-router-controller: createNewUser
     post:
       description: Creates a new user in the users list.
       operationId: createUser
-      produces: 
+      produces:
         - application/json
       parameters:
       - name: newUser
@@ -60,20 +60,20 @@ paths:
       responses:
         "200":
           description: New user response
-          schema: 
+          schema:
             $ref: "#/definitions/adduser"
-        default:  
+        default:
           description: unexpected error
           schema:
             $ref: "#/definitions/errorModel"
-            
-      
+
+
   /users/{id}/playlist:
     x-swagger-router-controller: userPersonalPlaylist
     get:
       description: Returns the list of songs that belong to a user with the specified id.
       operationId: getUserPlaylistByUserId
-      produces: 
+      produces:
       - application/json
       parameters:
       - name: id
@@ -85,23 +85,23 @@ paths:
       responses:
         "200":
           description: Users response
-          schema: 
+          schema:
             $ref: "#/definitions/playlist"
-        default:  
+        default:
           description: unexpected error
           schema:
             $ref: "#/definitions/errorModel"
-            
+
   /groups/{gid}/{id}/playlist:
     x-swagger-router-controller: userPlaylistByUserId
     get:
-      description: Returns the all the songs associated with a user in a group that the signed in user is a part of. The id is associated with the user whose playlist we are seeing. 
+      description: Returns the all the songs associated with a user in a group that the signed in user is a part of. The id is associated with the user whose playlist we are seeing.
       operationId: getUserPlaylistByGroupIdandUserId
-      produces: 
+      produces:
       - application/json
-      parameters: 
+      parameters:
       - name: gid
-        in: path 
+        in: path
         description: Produces an a list of users in the given group.
         required: true
         type: integer
@@ -115,13 +115,13 @@ paths:
       responses:
         "200":
           description: Users response
-          schema: 
+          schema:
             $ref: "#/definitions/playlist"
-        default:  
+        default:
           description: unexpected error
           schema:
             $ref: "#/definitions/errorModel"
-            
+
   /groups/{gid}/users:
     x-swagger-router-controller: groupUsers
     get:
@@ -147,7 +147,7 @@ paths:
           description: unexpected error
           schema:
             $ref: "#/definitions/errorModel"
-            
+
   /groups/{gid}/users/{id}:
     x-swagger-router-controller: groupUser
     get:
@@ -177,7 +177,7 @@ paths:
           description: unexpected error
           schema:
             $ref: "#/definitions/errorModel"
-    
+
     delete:
       description: Delete an individual user that belongs to a certain group.
       operationId: deleteSingleUserInGroup
@@ -205,7 +205,7 @@ paths:
           description: unexpected error
           schema:
             $ref: "#/definitions/errorModel"
-            
+
   /users/{id}/groups:
     x-swagger-router-controller: userGroups
     get:
@@ -231,7 +231,7 @@ paths:
           description: unexpected error
           schema:
             $ref: "#/definitions/errorModel"
-  
+
   /groups/{gid}/playlist:
     x-swagger-router-controller: compiledPlaylist
     get:
@@ -257,7 +257,7 @@ paths:
           description: unexpected error
           schema:
             $ref: "#/definitions/errorModel"
-            
+
   /users/{id}/playlist/songs:
     x-swagger-router-controller: addSong
     put:
@@ -287,7 +287,7 @@ paths:
           description: unexpected error
           schema:
             $ref: "#/definitions/errorModel"
-    
+
   /users/{id}/playlist/songs/{sid}:
     x-swagger-router-controller: deleteSong
     delete:
@@ -317,7 +317,7 @@ paths:
           description: unexpected error
           schema:
             $ref: "#/definitions/errorModel"
-            
+
   /g42/login:
     x-swagger-router-controller: login
     post:
@@ -339,7 +339,7 @@ paths:
           description: unexpected error
           schema:
             $ref: "#/definitions/errorModel"
-            
+
 definitions:
   user:
     type: object
@@ -360,7 +360,7 @@ definitions:
         type: "string"
       updated_at:
         type: "string"
-        
+
   groupName:
     type: object
     required:
@@ -368,7 +368,7 @@ definitions:
     properties:
       group_name:
         type: "string"
-        
+
   song:
     type: object
     required:
@@ -377,25 +377,25 @@ definitions:
     - songname
     - artistname
     properties:
-      songid: 
-        type: integer 
+      songid:
+        type: integer
         format: int64
-      userid: 
-        type: integer 
+      userid:
+        type: integer
         format: int64
       songname:
         type: string
-      artistname:  
+      artistname:
         type: string
-        
+
   addsong:
     type: object
     required:
     - userid
     - song
     properties:
-      userid: 
-        type: integer 
+      userid:
+        type: integer
         format: int64
       song:
         type: string
@@ -411,9 +411,9 @@ definitions:
         type: "string"
       password:
         type: "string"
-      group_name: 
+      group_name:
         type: "string"
-        
+
   user_name:
     type: string
     required:
@@ -421,7 +421,7 @@ definitions:
     properties:
       username:
         type: string
-      
+
   playlist:
     required:
     - songs
@@ -441,6 +441,4 @@ definitions:
         type: integer
         format: int64
       message:
-        type: string      
-       
-      
+        type: string
