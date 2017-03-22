@@ -23,7 +23,7 @@ paths:
     get:
       description: Returns a user name based on the specific id. The user must be authorized to access.
       operationId: getUserById
-      produces: 
+      produces:
       - application/json
       parameters:
       - name: id
@@ -35,19 +35,19 @@ paths:
       responses:
         "200":
           description: Users response
-          schema: 
+          schema:
             $ref: "#/definitions/user_name"
-        default:  
+        default:
           description: unexpected error
           schema:
             $ref: "#/definitions/errorModel"
-            
+
   /users:
     x-swagger-router-controller: createNewUser
     post:
       description: Creates a new user in the users list.
       operationId: createUser
-      produces: 
+      produces:
         - application/json
       parameters:
       - name: newUser
@@ -60,20 +60,20 @@ paths:
       responses:
         "200":
           description: New user response
-          schema: 
+          schema:
             $ref: "#/definitions/adduser"
-        default:  
+        default:
           description: unexpected error
           schema:
             $ref: "#/definitions/errorModel"
-            
-      
+
+
   /users/{id}/playlist:
     x-swagger-router-controller: userPersonalPlaylist
     get:
       description: Returns the list of songs that belong to a user with the specified id.
       operationId: getUserPlaylistByUserId
-      produces: 
+      produces:
       - application/json
       parameters:
       - name: id
@@ -85,23 +85,23 @@ paths:
       responses:
         "200":
           description: Users response
-          schema: 
+          schema:
             $ref: "#/definitions/playlist"
-        default:  
+        default:
           description: unexpected error
           schema:
             $ref: "#/definitions/errorModel"
-            
+
   /groups/{gid}/{id}/playlist:
     x-swagger-router-controller: userPlaylistByUserId
     get:
-      description: Returns the all the songs associated with a user in a group that the signed in user is a part of. The id is associated with the user whose playlist we are seeing. 
+      description: Returns the all the songs associated with a user in a group that the signed in user is a part of. The id is associated with the user whose playlist we are seeing.
       operationId: getUserPlaylistByGroupIdandUserId
-      produces: 
+      produces:
       - application/json
-      parameters: 
+      parameters:
       - name: gid
-        in: path 
+        in: path
         description: Produces an a list of users in the given group.
         required: true
         type: integer
@@ -115,14 +115,291 @@ paths:
       responses:
         "200":
           description: Users response
-          schema: 
+          schema:
             $ref: "#/definitions/playlist"
-        default:  
+        default:
           description: unexpected error
           schema:
             $ref: "#/definitions/errorModel"
-            
+
+  /groups/{gid}/users:
+    x-swagger-router-controller: groupUsers
+    get:
+      description: Gets all users that belong to a certain group.
+      operationId: getUsersInGroup
+      produces:
+      - application/json
+      parameters:
+      - name: gid
+        in: path
+        description: Return a group associated with that id
+        required: true
+        type: integer
+        format: int64
+      responses:
+        "200":
+          description: Got array of users in group
+          schema:
+            type: array
+            items:
+             $ref: "#/definitions/user"
+        default:
+          description: unexpected error
+          schema:
+            $ref: "#/definitions/errorModel"
+
+  /groups/{gid}/users/{id}:
+    x-swagger-router-controller: groupUser
+    get:
+      description: Gets an individual user that belongs to a certain group.
+      operationId: getSingleUserInGroup
+      produces:
+      - application/json
+      parameters:
+      - name: gid
+        in: path
+        description: Return a group associated with that id
+        required: true
+        type: integer
+        format: int64
+      - name: id
+        in: path
+        description: Return an individual associated with that id
+        required: true
+        type: integer
+        format: int64
+      responses:
+        "200":
+          description: Got individual user
+          schema:
+            $ref: "#/definitions/user"
+        default:
+          description: unexpected error
+          schema:
+            $ref: "#/definitions/errorModel"
+
+    delete:
+      description: Delete an individual user that belongs to a certain group.
+      operationId: deleteSingleUserInGroup
+      produces:
+      - application/json
+      parameters:
+      - name: gid
+        in: path
+        description: Return a group associated with that id
+        required: true
+        type: integer
+        format: int64
+      - name: id
+        in: path
+        description: Return an individual associated with that id
+        required: true
+        type: integer
+        format: int64
+      responses:
+        "204":
+          description: Users deleted
+          schema:
+            $ref: "#/definitions/user"
+        default:
+          description: unexpected error
+          schema:
+            $ref: "#/definitions/errorModel"
+
+  /users/{id}/groups:
+    x-swagger-router-controller: userGroups
+    get:
+      description: Gets all groups that belong to a certain user.
+      operationId: getGroupsPerUser
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: Returns a user associated with that id
+        required: true
+        type: integer
+        format: int64
+      responses:
+        "200":
+          description: Got array of groups that belong to user
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/groupName"
+        default:
+          description: unexpected error
+          schema:
+            $ref: "#/definitions/errorModel"
+
+  /groups/{gid}/playlist:
+    x-swagger-router-controller: compiledPlaylist
+    get:
+      description: Gets compiled playlist for group selected.
+      operationId: getGroupCompiledPlaylist
+      produces:
+      - application/json
+      parameters:
+      - name: gid
+        in: path
+        description: Return a group associated with that id
+        required: true
+        type: integer
+        format: int64
+      responses:
+        "200":
+          description: Got compiled group playlist
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/song"
+        default:
+          description: unexpected error
+          schema:
+            $ref: "#/definitions/errorModel"
+
+  /users/{id}/playlist/songs:
+    x-swagger-router-controller: addSong
+    put:
+      description: Add a song to authorized user's personal playlist.
+      operationId: addSong
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: Return an individual associated with that id
+        required: true
+        type: integer
+        format: int64
+      - name: song
+        in: body
+        description: Name of song with artist user wants to add
+        required: true
+        schema:
+            $ref: "#/definitions/addsong"
+      responses:
+        "200":
+          description: Added song
+          schema:
+            $ref: "#/definitions/addsong"
+        default:
+          description: unexpected error
+          schema:
+            $ref: "#/definitions/errorModel"
+
+  /users/{id}/playlist/songs/{sid}:
+    x-swagger-router-controller: deleteSong
+    delete:
+      description: Delete a song to authorized user's personal playlist.
+      operationId: deleteSong
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: Return an individual associated with that id
+        required: true
+        type: integer
+        format: int64
+      - name: sid
+        in: path
+        description: Id associated with song selected
+        required: true
+        type: integer
+        format: int64
+      responses:
+        "204":
+          description: Got individual user
+          schema:
+            $ref: "#/definitions/song"
+        default:
+          description: unexpected error
+          schema:
+            $ref: "#/definitions/errorModel"
+
+  /g42/login:
+    x-swagger-router-controller: login
+    post:
+      description: User authentication via sign-in.
+      operationId: userSignIn
+      parameters:
+      - name: user_name
+        in: body
+        description: Username of user trying to log-in
+        required: true
+        schema:
+          $ref: "#/definitions/user_name"
+      responses:
+        "200":
+          description: Logged in successfully
+          schema:
+            $ref: "#/definitions/user_name"
+        default:
+          description: unexpected error
+          schema:
+            $ref: "#/definitions/errorModel"
+
 definitions:
+  user:
+    type: object
+    required:
+    - user_id
+    - user_name
+    - password
+    - created_at
+    - updated_at
+    properties:
+      user_id:
+        type: "integer"
+      user_name:
+        type: "string"
+      password:
+        type: "string"
+      created_at:
+        type: "string"
+      updated_at:
+        type: "string"
+
+  groupName:
+    type: object
+    required:
+    - group_name
+    properties:
+      group_name:
+        type: "string"
+
+  song:
+    type: object
+    required:
+    - songid
+    - userid
+    - songname
+    - artistname
+    properties:
+      songid:
+        type: integer
+        format: int64
+      userid:
+        type: integer
+        format: int64
+      songname:
+        type: string
+      artistname:
+        type: string
+
+  addsong:
+    type: object
+    required:
+    - userid
+    - song
+    properties:
+      userid:
+        type: integer
+        format: int64
+      song:
+        type: string
+
   adduser:
     type: object
     required:
@@ -134,8 +411,9 @@ definitions:
         type: "string"
       password:
         type: "string"
-      group_name: 
+      group_name:
         type: "string"
+
   user_name:
     type: string
     required:
@@ -143,6 +421,7 @@ definitions:
     properties:
       username:
         type: string
+
   playlist:
     required:
     - songs
@@ -151,26 +430,7 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/song'
-  song:
-    type: object
-    required:
-    - songid
-    - userid
-    - songName
-    - artistname
-    properties:
-      songid:
-        type: integer
-        description: This id is associated with a particular song
-      userid: 
-        type: integer 
-        description: This id is associated with a particular user
-      songName:
-        type: string
-        description: The name of the song
-      artistname:  
-        type: string
-        description: Artist name
+
   errorModel:
     type: object
     required:
@@ -181,4 +441,4 @@ definitions:
         type: integer
         format: int64
       message:
-        type: string      
+        type: string
