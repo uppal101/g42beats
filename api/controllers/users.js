@@ -1,8 +1,10 @@
 
-//songs
 //users
-//groups
-//grou
+//songs
+//playlist
+//goups_users table
+
+
 
 
 

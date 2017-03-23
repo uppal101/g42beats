@@ -1,8 +1,9 @@
 //DATABASE WE WILL NEED
 
-// users
+//users
 //songs
-//g42
+//playlist
+//goups_users table
 
 
 module.exports.getUserPlaylistByGroupIdandUserId = function(args, res, next) {
