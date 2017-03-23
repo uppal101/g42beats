@@ -1,3 +1,11 @@
+
+//songs
+//users
+//groups
+//grou
+
+
+
 module.exports.getUserById = function(args, res, next) {
   /**
    * Returns a user name based on the specific id. The user must be authorized to access.
@@ -46,6 +54,9 @@ module.exports.getUserPlaylistByUserId = function(args, res, next) {
    * id Long Fetch playlist with songs associated with signed in user id.
    * returns playlist
    **/
+
+
+
   var examples = {};
   examples['application/json'] = {
   "songs" : [ {
@@ -81,7 +92,8 @@ module.exports.getGroupsPerUser = function(args, res, next) {
     res.end();
   }
 }
-
+//BREAK WEEK : how to better organize relationship database to include user from
+// multiple groups. eg: instructor in multiple groups.
 
 module.exports.addSong = function(args, res, next) {
   /**
