@@ -95,7 +95,7 @@ paths:
           schema:
             $ref: "#/definitions/errorModel"
 
-  /groups/{gid}/group_users/{id}/playlist:
+  /groups/{gid}/group_members/{id}/playlist:
     x-swagger-router-controller: group
     get:
       description: Returns the all the songs associated with a user in a group that the signed in user is a part of. The id is associated with the user whose playlist we are seeing.
@@ -127,7 +127,7 @@ paths:
           schema:
             $ref: "#/definitions/errorModel"
 
-  /groups/{gid}/group_users/users:
+  /groups/{gid}/group_members/users:
     x-swagger-router-controller: groups
     get:
       description: Gets all users that belong to a certain group.
@@ -153,7 +153,7 @@ paths:
           schema:
             $ref: "#/definitions/errorModel"
 
-  /groups/{gid}/group_users/users/{id}:
+  /groups/{gid}/group_members/users/{id}:
     x-swagger-router-controller: groups
     get:
       description: Gets an individual user that belongs to a certain group.
@@ -211,7 +211,7 @@ paths:
           schema:
             $ref: "#/definitions/errorModel"
 
-  /users/{id}/groups_users:
+  /users/{id}/groups_members:
     x-swagger-router-controller: user
     get:
       description: Gets all groups that belong to a certain user.
@@ -237,7 +237,7 @@ paths:
           schema:
             $ref: "#/definitions/errorModel"
 
-  /groups/{gid}/group_users/playlist:
+  /groups/{gid}/group_members/playlist:
     x-swagger-router-controller: group
     get:
       description: Gets compiled playlist for group selected.
