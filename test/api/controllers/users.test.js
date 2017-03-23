@@ -5,16 +5,16 @@ const knex = require('../../../knex');
 
 const expect = require('mocha').expect;
 
-
-before((done) => {
-    knex.migrate.latest()
-        .then(() => {
-            done();
-        })
-        .catch((err) => {
-            done(err);
-        });
-});
+process.env.NODE_ENV = 'test';
+// before((done) => {
+//     knex.migrate.latest()
+//         .then(() => {
+//             done();
+//         })
+//         .catch((err) => {
+//             done(err);
+//         });
+// });
 
 // `beforeEach` is run before each test in a describe
 beforeEach((done) => {
@@ -43,23 +43,19 @@ beforeEach((done) => {
               knex('songs').insert(
                 { id: 1,
                   song_name: 'Shape Of You',
-                  artist: 'Ed Sheeran',
-                  user_id: 2 // remove this from songs
-                }
+                  artist: 'Ed Sheeran'
+                },
                 { id: 2,
                   song_name: 'Rockabye',
-                  artist: 'Clean Candid',
-                  user_id: 2
-                }
+                  artist: 'Clean Candid'
+                },
                 { id: 3,
                   song_name: 'Papers',
-                  artist: 'Usher',
-                  user_id: 1
-                }
+                  artist: 'Usher'
+                },
                 { id: 4,
                   song_name: 'Mercy',
-                  artist: 'Shawn Mendes',
-                  user_id: 1
+                  artist: 'Shawn Mendes'
                 }
               )
             ])
@@ -70,13 +66,53 @@ beforeEach((done) => {
         .then(function() {
           return Promise.all([
             knex('group_members').insert(
-                {id: 1,
-                user_id:})
+                { id: 1,
+                  group_id: 1,
+                  user_id: 1
+                },
+                { id: 2,
+                  group_id: 1,
+                  user_id: 2
+                }
+              )
           ])
         })
-    .catch((err) => {
-            done(err);
-        });
+        .then(function() {
+          return knex.raw(`SELECT setval('users_id_seq', (SELECT MAX(id) FROM users))`)
+        })
+        .then(function(){
+          return Promise.all([
+            knex('playlist').insert(
+              { id: 1
+                user_id: 2,
+                song_id: 1
+              },
+              { id: 2
+                user_id: 2,
+                song_id: 2
+              },
+              { id: 3
+                user_id: 1,
+                song_id: 3
+              },
+              { id: 4
+                user_id: 1,
+                song_id: 4
+              }
+            )
+          ])
+        })
+        .then(function() {
+          return knex.raw(`SELECT setval('playlist_id_seq', (SELECT MAX(id) FROM playlist))`)
+        })
+        .then(()=> done());
+});
+
+afterEach((done)=> {
+  knex.migrate.rollback()
+  .then(()=> {
+    done(err)
+  });
 });
 
 
@@ -107,4 +143,3 @@ describe('GET /users/:id', function() {
 // })
 // });
 // });
-process.env.NODE_ENV = 'test';
