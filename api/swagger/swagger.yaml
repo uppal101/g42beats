@@ -35,7 +35,7 @@ paths:
         format: int64
       responses:
         "200":
-          description: Users response
+          description: Welcome authorized user successfully
           schema:
             $ref: "#/definitions/username"
         default:
@@ -85,15 +85,17 @@ paths:
         format: int64
       responses:
         "200":
-          description: Users response
+          description: Retrieved personal playlist
           schema:
-            $ref: "#/definitions/playlist"
+            type: array
+            items:
+              $ref: "#/definitions/song"
         default:
           description: unexpected error
           schema:
             $ref: "#/definitions/errorModel"
 
-  /groups/{gid}/{id}/playlist:
+  /groups/{gid}/group_members/{id}/playlist:
     x-swagger-router-controller: group
     get:
       description: Returns the all the songs associated with a user in a group that the signed in user is a part of. The id is associated with the user whose playlist we are seeing.
@@ -115,16 +117,18 @@ paths:
         format: int64
       responses:
         "200":
-          description: Users response
+          description: Retrieved a user's playlist in a group that authorized user is part of.
           schema:
-            $ref: "#/definitions/playlist"
+            type: array
+            items:
+              $ref: "#/definitions/song"
         default:
           description: unexpected error
           schema:
             $ref: "#/definitions/errorModel"
 
-  /groups/{gid}/users:
-    x-swagger-router-controller: group
+  /groups/{gid}/group_members/users:
+    x-swagger-router-controller: groups
     get:
       description: Gets all users that belong to a certain group.
       operationId: getUsersInGroup
@@ -149,8 +153,8 @@ paths:
           schema:
             $ref: "#/definitions/errorModel"
 
-  /groups/{gid}/users/{id}:
-    x-swagger-router-controller: group
+  /groups/{gid}/group_members/users/{id}:
+    x-swagger-router-controller: groups
     get:
       description: Gets an individual user that belongs to a certain group.
       operationId: getSingleUserInGroup
@@ -207,7 +211,7 @@ paths:
           schema:
             $ref: "#/definitions/errorModel"
 
-  /users/{id}/groups:
+  /users/{id}/groups_members:
     x-swagger-router-controller: user
     get:
       description: Gets all groups that belong to a certain user.
@@ -233,7 +237,7 @@ paths:
           schema:
             $ref: "#/definitions/errorModel"
 
-  /groups/{gid}/playlist:
+  /groups/{gid}/group_members/playlist:
     x-swagger-router-controller: group
     get:
       description: Gets compiled playlist for group selected.
@@ -309,11 +313,17 @@ paths:
         required: true
         type: integer
         format: int64
+      - name: song
+        in: body
+        description: Name of song with artist user wants to add
+        required: true
+        schema:
+            $ref: "#/definitions/deletesong"
       responses:
         "204":
           description: Got individual user
           schema:
-            $ref: "#/definitions/song"
+            $ref: "#/definitions/deletesong"
         default:
           description: unexpected error
           schema:
@@ -376,19 +386,31 @@ definitions:
     type: object
     required:
     - songid
-    - userid
     - songname
     - artistname
     properties:
       songid:
         type: integer
         format: int64
-      userid:
-        type: integer
-        format: int64
       songname:
         type: string
       artistname:
+        type: string
+        
+  deletesong:
+    type: object
+    required:
+    - userid
+    - songid
+    - song
+    properties:
+      userid:
+        type: integer
+        format: int64
+      songid:
+        type: integer
+        format: int64
+      song:
         type: string
 
   addsong:
@@ -425,14 +447,6 @@ definitions:
       username:
         type: string
 
-  playlist:
-    required:
-    - songs
-    properties:
-      songs:
-        type: array
-        items:
-          $ref: '#/definitions/song'
 
   errorModel:
     type: object
