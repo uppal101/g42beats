@@ -35,7 +35,7 @@
   },
   "scripts": {
     "start": "node app.js",
-    "test": "swagger project test"
+    "test": "mocha test/api/controllers/users.test.js"
   },
   "directories": {
     "test": "test"
