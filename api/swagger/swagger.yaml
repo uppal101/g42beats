@@ -20,7 +20,7 @@ produces:
 - application/json
 paths:
   /users/{id}:
-    x-swagger-router-controller: user
+    x-swagger-router-controller: users
     get:
       description: Returns a user name based on the specific id. The user must be authorized to access.
       operationId: getUserById
@@ -44,7 +44,7 @@ paths:
             $ref: "#/definitions/errorModel"
 
   /users:
-    x-swagger-router-controller: user
+    x-swagger-router-controller: users
     post:
       description: Creates a new user in the users list.
       operationId: createUser
@@ -62,7 +62,7 @@ paths:
         "200":
           description: New user response
           schema:
-            $ref: "#/definitions/adduser"
+            $ref: "#/definitions/adduserresponse"
         default:
           description: unexpected error
           schema:
@@ -70,7 +70,7 @@ paths:
 
 
   /users/{id}/playlist:
-    x-swagger-router-controller: user
+    x-swagger-router-controller: users
     get:
       description: Returns the list of songs that belong to a user with the specified id.
       operationId: getUserPlaylistByUserId
@@ -96,7 +96,7 @@ paths:
             $ref: "#/definitions/errorModel"
 
   /groups/{gid}/group_members/{id}/playlist:
-    x-swagger-router-controller: group
+    x-swagger-router-controller: groups
     get:
       description: Returns the all the songs associated with a user in a group that the signed in user is a part of. The id is associated with the user whose playlist we are seeing.
       operationId: getUserPlaylistByGroupIdandUserId
@@ -212,7 +212,7 @@ paths:
             $ref: "#/definitions/errorModel"
 
   /users/{id}/groups_members:
-    x-swagger-router-controller: user
+    x-swagger-router-controller: users
     get:
       description: Gets all groups that belong to a certain user.
       operationId: getGroupsPerUser
@@ -238,7 +238,7 @@ paths:
             $ref: "#/definitions/errorModel"
 
   /groups/{gid}/group_members/playlist:
-    x-swagger-router-controller: group
+    x-swagger-router-controller: groups
     get:
       description: Gets compiled playlist for group selected.
       operationId: getGroupCompiledPlaylist
@@ -264,7 +264,7 @@ paths:
             $ref: "#/definitions/errorModel"
 
   /users/{id}/playlist/songs:
-    x-swagger-router-controller: user
+    x-swagger-router-controller: users
     put:
       description: Add a song to authorized user's personal playlist.
       operationId: addSong
@@ -294,7 +294,7 @@ paths:
             $ref: "#/definitions/errorModel"
 
   /users/{id}/playlist/songs/{sid}:
-    x-swagger-router-controller: user
+    x-swagger-router-controller: users
     delete:
       description: Delete a song to authorized user's personal playlist.
       operationId: deleteSong
@@ -332,7 +332,7 @@ paths:
 
 
   /user/login:
-    x-swagger-router-controller: user
+    x-swagger-router-controller: users
     post:
       description: User authentication via sign-in.
       operationId: userSignIn
@@ -342,12 +342,12 @@ paths:
         description: Username of user trying to log-in
         required: true
         schema:
-          $ref: "#/definitions/username"
+          $ref: "#/definitions/userlogin"
       responses:
         "200":
           description: Logged in successfully
           schema:
-            $ref: "#/definitions/username"
+            $ref: "#/definitions/loginresponse"
         default:
           description: unexpected error
           schema:
@@ -438,7 +438,43 @@ definitions:
         type: "string"
       group_name:
         type: "string"
-
+        
+  adduserresponse:
+    type: object
+    required:
+    - user_name
+    - group_name
+    - token
+    properties:
+      user_name:
+        type: "string"
+      group_name:
+        type: "string"
+      token:
+        type: "string"
+  loginresponse:
+    type: object
+    required:
+    - username
+    - userid
+    properties:
+      username:
+        type: string
+      userid:
+        type: integer
+        format: int64
+  
+  userlogin:
+    type: object
+    required:
+    - username
+    - password
+    properties:
+      username:
+        type: string
+      password:
+        type: string
+  
   username:
     type: object
     required:
@@ -446,7 +482,7 @@ definitions:
     properties:
       username:
         type: string
-
+      
 
   errorModel:
     type: object
