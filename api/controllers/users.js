@@ -15,16 +15,18 @@ const {
 } = require('humps');
 
 function userbyId() {
-console.log("I'm trying to create the user");
+console.log("I'm trying to grab the user byID number the user");
 
-  const userId = req.params.id
+  const userId = req.params.id;
+  
+  //
 
 
 
 }
 
 //grab username where id === req.params.id
-function createUser(req, res) {
+function createUser(req, res, next) {
     console.log('add user');
 
     bcrypt.hash(req.body.password, 12)
@@ -62,12 +64,6 @@ function createUser(req, res) {
 ////
 
 
-module.export ={
-    createUser : createUser,
-    
-}
-
-
 
 
 
@@ -93,26 +89,26 @@ module.export ={
         }
 
 
-        module.exports.createUser = function(args, res, next) {
-            /**
-             * Creates a new user in the users list.
-             *
-             * newUser Adduser Adds new user to database.
-             * returns adduser
-             **/
-            var examples = {};
-            examples['application/json'] = {
-                "password": "aeiou",
-                "group_name": "aeiou",
-                "user_name": "aeiou"
-            };
-            if (Object.keys(examples).length > 0) {
-                res.setHeader('Content-Type', 'application/json');
-                res.end(JSON.stringify(examples[Object.keys(examples)[0]] || {}, null, 2));
-            } else {
-                res.end();
-            }
-        }
+        // module.exports.createUser = function(args, res, next) {
+        //     /**
+        //      * Creates a new user in the users list.
+        //      *
+        //      * newUser Adduser Adds new user to database.
+        //      * returns adduser
+        //      **/
+        //     var examples = {};
+        //     examples['application/json'] = {
+        //         "password": "aeiou",
+        //         "group_name": "aeiou",
+        //         "user_name": "aeiou"
+        //     };
+        //     if (Object.keys(examples).length > 0) {
+        //         res.setHeader('Content-Type', 'application/json');
+        //         res.end(JSON.stringify(examples[Object.keys(examples)[0]] || {}, null, 2));
+        //     } else {
+        //         res.end();
+        //     }
+        // }
 
 
         /////createnewUserfrom mifit app
@@ -285,4 +281,10 @@ module.export ={
             } else {
                 res.end();
             }
+        }
+
+
+        module.exports ={
+            createUser : createUser,
+
         }
