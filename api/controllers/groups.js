@@ -1,9 +1,13 @@
 //DATABASE WE WILL NEED
-
-//users
-//songs
-//playlist
-//goups_users table
+const knex = require('../../knex');
+const bcrypt = require('bcrypt-as-promised');
+const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser');
+const dotenv = require('dotenv').config();
+const {
+    camelizeKeys,
+    decamelizeKeys
+} = require('humps');
 
 
 module.exports.getUserPlaylistByGroupIdandUserId = function(args, res, next) {
@@ -78,23 +82,5 @@ module.exports.getSingleUserInGroup = function(args, res, next) {
 }
 
 module.exports.getGroupCompiledPlaylist = function(args, res, next) {
-  /**
-   * Gets compiled playlist for group selected.
-   *
-   * gid Long Return a group associated with that id
-   * returns List
-   **/
-  var examples = {};
-  examples['application/json'] = [ {
-  "artistname" : "aeiou",
-  "songid" : 123456789,
-  "userid" : 123456789,
-  "songname" : "aeiou"
-} ];
-  if (Object.keys(examples).length > 0) {
-    res.setHeader('Content-Type', 'application/json');
-    res.end(JSON.stringify(examples[Object.keys(examples)[0]] || {}, null, 2));
-  } else {
-    res.end();
-  }
+  knex('songs')
 }
