@@ -18,7 +18,7 @@ function userbyId() {
 console.log("I'm trying to grab the user byID number the user");
 
   const userId = req.params.id;
-  
+
   //
 
 
@@ -27,44 +27,44 @@ console.log("I'm trying to grab the user byID number the user");
 
 //grab username where id === req.params.id
 function createUser(req, res, next) {
-    console.log('add user');
-
+  let userId
     bcrypt.hash(req.body.password, 12)
         .then((hashed_password) => {
-            return knex('users')
-                .then((user) => {
                     return knex('users')
                         .insert({
-                            user_name: req.body.username,
-                            hashed_password: hashed_password
+                            user_name: req.body.user_name,
+                            hashed_password: hashed_password,
+                            // group_name: req.body.groupname
                         }, '*');
-                })
-                .then((user) => {
-                    const newUser = result[0];
-                    const claim = {
-                        userId: newUser.id,
-                        // permissions: newUser.permissions
-                        //NOTE: this will be useful for the superuser.
-                    };
-                    const token = jwt.sign(claim, process.env.JWT_KEY);
-                    res.cookie('token', token, {
-                        httpOnly: true
-                    });
-                })
-                .then((users) => {
-                    const user = users[0];
-                    delete user.hashed_password;
-                    res.send(camelizeKeys(user));
-                })
-                .catch((err) => {
-                    next(err);
-                });
+        })
+        .then((user) => {
+            let newUser = user[0];
+            const claim = {
+                userId: newUser.id,
+                // permissions: newUser.permissions
+                //NOTE: this will be useful for the superuser.
+            }
+
+            const token = jwt.sign(claim, process.env.JWT_KEY);
+            newUser.token = token
+            delete newUser.hashed_password;
+            res.status(200).send(camelizeKeys(newUser));
+            return newUser;
+        })
+        .then((checkingGroup) => {
+           const id = knex('groups').where('group_name', req.body.groupname).select('id');
+           return id;
+        })
+        .then((insertingGroupMember) => {
+          console.log(checkingGroup);
+          knex('group_members').insert({group_id: insertingGroupMember, user_id: userId})
+        })
+        .catch((err) => {
+            next(err);
         });
-};
+      }
+
 ////
-
-
-
 
 
 
@@ -89,62 +89,6 @@ function createUser(req, res, next) {
         }
 
 
-        // module.exports.createUser = function(args, res, next) {
-        //     /**
-        //      * Creates a new user in the users list.
-        //      *
-        //      * newUser Adduser Adds new user to database.
-        //      * returns adduser
-        //      **/
-        //     var examples = {};
-        //     examples['application/json'] = {
-        //         "password": "aeiou",
-        //         "group_name": "aeiou",
-        //         "user_name": "aeiou"
-        //     };
-        //     if (Object.keys(examples).length > 0) {
-        //         res.setHeader('Content-Type', 'application/json');
-        //         res.end(JSON.stringify(examples[Object.keys(examples)[0]] || {}, null, 2));
-        //     } else {
-        //         res.end();
-        //     }
-        // }
-
-
-        /////createnewUserfrom mifit app
-
-        //make sure to add token functionality and send token to user
-        function addNewUser(req, res) {
-            console.log('add user');
-            // console.log(req.swagger.params.user.value.email);
-            // const newUser = req.swagger.newUser;
-
-            bcrypt.hash(req.body.password, 12)
-                .then((hashed_password) => {
-                    return Users.forge({
-                            first_name: req.body.first_name,
-                            hashed_password: hashed_password,
-                        })
-                        .save()
-                        .then((user) => {
-                            let u = JSON.parse(JSON.stringify(user));
-                            delete u.hashed_password;
-                            // console.log(u);
-                            res.setHeader('Content-Type', 'application/json');
-                            res.end(u);
-
-                        })
-                        .catch(function(err) {
-                            res.setHeader("Content-Type", "application/json")
-                            res.status(400)
-
-                            res.end(JSON.stringify({
-                                code: 400,
-                                message: "foo"
-                            }));
-                        });
-                });
-        }
 
         //**********************************************************end of newUser in mifit
         module.exports.getUserPlaylistByUserId = function(args, res, next) {
@@ -239,24 +183,44 @@ function createUser(req, res, next) {
             }
         }
 
-        module.exports.userSignIn = function(args, res, next) {
-            /**
-             * User authentication via sign-in.
-             *
-             * user_name User_name Username of user trying to log-in
-             * returns user_name
-             **/
-            var examples = {};
-            examples['application/json'] = {
-                "username": "aeiou"
-            };
-            if (Object.keys(examples).length > 0) {
-                res.setHeader('Content-Type', 'application/json');
-                res.end(JSON.stringify(examples[Object.keys(examples)[0]] || {}, null, 2));
+        module.exports.userSignIn = function(req, res, next) {
+          console.log(req);
+          let tokenID
+          knex('users')
+          .where('user_name', req.body.user_name)
+          .then(result => {
+            const user = result[0];
+            if (!user) {
+                res.set('Content-type', 'plain/text');
+                res.status(400).send('Bad username or password');
             } else {
-                res.end();
+              const user = result[0];
+              return bcrypt.compare(req.body.password, user.hashed_password);
             }
-        }
+          })
+          .then((loggedInUser) => {
+            console.log("hello");
+            jwt.verify(req.cookies.token, process.env.JWT_KEY, (err, payload) => {
+              if (err) {
+                res.set("Content-Type", "text/plain");
+                return res.status(401).send('Unauthorized');
+              } else {
+              tokenID = claim.userId;
+               next();
+             }
+          })
+          .then((authOK) => {
+            const authorizedUser = {
+              id: user.id,
+              user_name: user.user_name
+            }
+            res.status(200).send(camelizeKeys(authorizedUser));
+          })
+          .catch((err) => {
+            console.error(err)
+          })
+        })
+      }
 
 
         exports.deleteSingleUserInGroup = function(args, res, next) {
@@ -286,5 +250,6 @@ function createUser(req, res, next) {
 
         module.exports ={
             createUser : createUser,
+            userSignIn : userSignIn,
 
         }
