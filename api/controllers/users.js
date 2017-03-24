@@ -1,12 +1,12 @@
+'use strict';
 
 //users
 //songs
 //playlist
 //goups_users table
 
-
-
-
+const bcrypt = require('bcrypt-as-promised');
+// const Users = require('../../cotroller/users');
 
 module.exports.getUserById = function(args, res, next) {
   /**
@@ -49,6 +49,40 @@ module.exports.createUser = function(args, res, next) {
   }
 }
 
+
+/////createnewUserfrom mifit app
+
+//make sure to add token functionality and send token to user
+function addNewUser(req, res) {
+  console.log('add user');
+  // console.log(req.swagger.params.user.value.email);
+  // const newUser = req.swagger.newUser;
+
+  bcrypt.hash(req.body.password, 12)
+    .then((hashed_password) => {
+      return Users.forge({
+       first_name: req.body.first_name,
+       hashed_password: hashed_password,
+    })
+    .save()
+    .then((user) => {
+      let u = JSON.parse(JSON.stringify(user));
+      delete u.hashed_password;
+      // console.log(u);
+      res.setHeader('Content-Type', 'application/json');
+      res.end(u);
+
+    })
+    .catch(function (err) {
+      res.setHeader("Content-Type", "application/json")
+      res.status(400)
+
+      res.end(JSON.stringify({code: 400, message: "foo"}));
+    });
+  });
+}
+
+//**********************************************************end of newUser in mifit
 module.exports.getUserPlaylistByUserId = function(args, res, next) {
   /**
    * Returns the list of songs that belong to a user with the specified id.
