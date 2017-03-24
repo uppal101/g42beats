@@ -20,10 +20,10 @@ produces:
 - application/json
 paths:
   /users/{id}:
-    x-swagger-router-controller: user
+    x-swagger-router-controller: users
     get:
       description: Returns a user name based on the specific id. The user must be authorized to access.
-      operationId: getUserById
+      operationId: userById
       produces:
       - application/json
       parameters:
@@ -44,7 +44,7 @@ paths:
             $ref: "#/definitions/errorModel"
 
   /users:
-    x-swagger-router-controller: user
+    x-swagger-router-controller: users
     post:
       description: Creates a new user in the users list.
       operationId: createUser
@@ -70,7 +70,7 @@ paths:
 
 
   /users/{id}/playlist:
-    x-swagger-router-controller: user
+    x-swagger-router-controller: users
     get:
       description: Returns the list of songs that belong to a user with the specified id.
       operationId: getUserPlaylistByUserId
@@ -150,7 +150,7 @@ paths:
             $ref: "#/definitions/errorModel"
 
   /groups/{gid}/users/{id}:
-    x-swagger-router-controller: group
+    x-swagger-router-controller: groups
     get:
       description: Gets an individual user that belongs to a certain group.
       operationId: getSingleUserInGroup
@@ -208,7 +208,7 @@ paths:
             $ref: "#/definitions/errorModel"
 
   /users/{id}/groups:
-    x-swagger-router-controller: user
+    x-swagger-router-controller: users
     get:
       description: Gets all groups that belong to a certain user.
       operationId: getGroupsPerUser
@@ -260,7 +260,7 @@ paths:
             $ref: "#/definitions/errorModel"
 
   /users/{id}/playlist/songs:
-    x-swagger-router-controller: user
+    x-swagger-router-controller: users
     put:
       description: Add a song to authorized user's personal playlist.
       operationId: addSong
@@ -322,7 +322,7 @@ paths:
 
 
   /user/login:
-    x-swagger-router-controller: user
+    x-swagger-router-controller: users
     post:
       description: User authentication via sign-in.
       operationId: userSignIn
