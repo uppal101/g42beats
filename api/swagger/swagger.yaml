@@ -23,7 +23,7 @@ paths:
     x-swagger-router-controller: users
     get:
       description: Returns a user name based on the specific id. The user must be authorized to access.
-      operationId: getUserById
+      operationId: userById
       produces:
       - application/json
       parameters:
@@ -154,6 +154,7 @@ paths:
             $ref: "#/definitions/errorModel"
 
   /groups/{gid}/group_members/users/{id}:
+  
     x-swagger-router-controller: groups
     get:
       description: Gets an individual user that belongs to a certain group.
@@ -211,7 +212,9 @@ paths:
           schema:
             $ref: "#/definitions/errorModel"
 
+
   /users/{id}/groups_members:
+
     x-swagger-router-controller: users
     get:
       description: Gets all groups that belong to a certain user.
