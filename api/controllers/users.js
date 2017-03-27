@@ -72,8 +72,6 @@ function getUserPlaylistByUserId(req, res){
 
       }
 
-
-
     })
     // delete selectsongsByuserId[0].created_at;
     // delete selectsongsByuserId[0].updated_at;
