@@ -44,7 +44,7 @@ paths:
             $ref: "#/definitions/errorModel"
 
   /users:
-    x-swagger-router-controller: users
+    x-swagger-router-controller: login
     post:
       description: Creates a new user in the users list.
       operationId: createUser
@@ -334,8 +334,8 @@ paths:
 
 
 
-  /user/login:
-    x-swagger-router-controller: users
+  /users/login:
+    x-swagger-router-controller: login
     post:
       description: User authentication via sign-in.
       operationId: userSignIn
@@ -445,27 +445,32 @@ definitions:
   adduserresponse:
     type: object
     required:
+    - userid
     - user_name
     - group_name
-    - token
     properties:
       user_name:
         type: "string"
       group_name:
         type: "string"
-      token:
-        type: "string"
+      userid:
+        type: integer
+        format: int64
+   
   loginresponse:
     type: object
     required:
     - username
     - userid
+    - token
     properties:
       username:
         type: string
       userid:
         type: integer
         format: int64
+      token:
+        type: "string"
   
   userlogin:
     type: object
