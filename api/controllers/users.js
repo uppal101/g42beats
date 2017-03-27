@@ -64,29 +64,27 @@ function getUserPlaylistByUserId(req, res){
   .select()
   .where('user_id', userId)
     .then((usersongs) => {
+      console.log(usersongs);
       if(!usersongs){
-        console.log(userssongs);
+      //   // console.log(userssongs);
         res.status(404).json('Not Found');
       } else {
-        userssongs.map()
-
+        usersongs.map(function(object){
+          delete object.hashed_password;
+          delete object.song_id;
+          delete object.updated_at;
+          delete object.created_at;
+          delete object.hashed_password;
+          delete object.user_id;
+        });
       }
-
+      res.status(200).json(usersongs);
     })
-    // delete selectsongsByuserId[0].created_at;
-    // delete selectsongsByuserId[0].updated_at;
-      // .select('song_id')
-      // .where('user_id', selectsongsByuserId);
-      // .then((songs)=> {
+    .catch((err) => {
+      console.error(err);
+    })
 
-      // })
-    // })
 
-  // selct from ()
-  // where() user
-
-  // .join('group_members', 'group_id', "=", )
-}
 
 
         module.exports.getUserById = function(args, res, next) {
