@@ -486,10 +486,14 @@ definitions:
   username:
     type: object
     required:
+    - userid
     - username
     properties:
       username:
         type: string
+      userid:
+        type: integer
+        format: int64
       
 
   errorModel:

@@ -72,8 +72,6 @@ function getUserPlaylistByUserId(req, res){
 
       }
 
-
-
     })
     // delete selectsongsByuserId[0].created_at;
     // delete selectsongsByuserId[0].updated_at;
@@ -89,7 +87,6 @@ function getUserPlaylistByUserId(req, res){
 
   // .join('group_members', 'group_id', "=", )
 }
-
 
 
         module.exports.getUserById = function(args, res, next) {
@@ -207,49 +204,8 @@ function getUserPlaylistByUserId(req, res){
         }
 
 
-// //grab username where id === req.params.id
-// function createUser(req, res, next) {
-//     console.log('add user');
-//
-//     bcrypt.hash(req.body.password, 12)
-//         .then((hashed_password) => {
-//             return knex('users')
-//                 .then((user) => {
-//                     return knex('users')
-//                         .insert({
-//                             user_name: req.body.username,
-//                             hashed_password: hashed_password
-//                         }, '*');
-//                 })
-//                 .then((user) => {
-//                     const newUser = result[0];
-//                     const claim = {
-//                         userId: newUser.id,
-//                         // permissions: newUser.permissions
-//                         //NOTE: this will be useful for the superuser.
-//                     };
-//                     const token = jwt.sign(claim, process.env.JWT_KEY);
-//                     res.cookie('token', token, {
-//                         httpOnly: true
-//                     });
-//                 })
-//                 .then((users) => {
-//                     const user = users[0];
-//                     delete user.hashed_password;
-//                     res.send(camelizeKeys(user));
-//                 })
-//                 .catch((err) => {
-//                     next(err);
-//                 });
-//         });
-// };
-// ////
-//
-//
-//
-//
-//
-//
+
+
 //
 //         module.exports.getUserById = function(args, res, next) {
 //             /**
@@ -414,7 +370,5 @@ function getUserPlaylistByUserId(req, res){
             userById: userById,
             getUserPlaylistByUserId: getUserPlaylistByUserId
             // getGroupCompiledPlaylist: getGroupCompiledPlaylist
-      
-           
-        }
 
+        }
