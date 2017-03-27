@@ -2,6 +2,7 @@
 
 var SwaggerExpress = require('swagger-express-mw');
 var app = require('express')();
+const auth = require('./validations/verifytoken.js');
 
 
 
@@ -9,6 +10,10 @@ var app = require('express')();
 var config = {
   appRoot: __dirname // required config
 };
+
+// app.use('/api/controllers/groups', auth.verify);
+//
+// app.use('/api/controllers/users', auth.verify);
 
 SwaggerExpress.create(config, function(err, swaggerExpress) {
   if (err) { throw err; }
