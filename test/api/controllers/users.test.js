@@ -2,7 +2,7 @@
 
 process.env.NODE_ENV = 'test';
 
-// const { describe, it } = require('mocha');
+
 const assert = require('chai').assert;
 const supertest = require('supertest');
 const knex = require('../../../knex');
@@ -11,7 +11,7 @@ const bcrypt = require('bcrypt');
 
 
 
-describe('users routes', () => {
+
 
   // `before` runs once before all tests in a describe
   before((done) => {
@@ -38,17 +38,30 @@ describe('users routes', () => {
       });
   });
 
+  // afterEach(done => {
+  //   knex.migrate.rollback()
+  //   .then(() => done())
+  //   .catch((err) => {
+  //     done(err);
+  //   });
+  // });
+  //
+  // after(() => {
+  //   knex.destroy()
+  // })
+
     //starting to write tests Ivonne
 
     //get a userByID
+describe('GET users/{id}', () => {
     it('should respond with user information with the specified id', (done) => {
       supertest(app)
         .get('/users/1')
         .set('Accept', 'application/json')
-        .expect(200,{
+        .expect(200, [{
           "id": 1,
           "user_name": 'AlexKrawiec'
-        }, done);
+        }], done);
     });
 
     it('should respond with 404 if user enters incorrect parameter', (done) => {
@@ -62,70 +75,12 @@ describe('users routes', () => {
       supertest(app)
         .get('/users/4')
         .set('Accept', 'application/json')
-        .expect({
+        .expect([{
           id: 4,
           user_name: 'SanjeetUppal'
-        }, done);
+        }], done);
     });
-
-    //createUser
-    it('should send response to POST /users', (done) => {
-    const password = 'thegivenbySanjeet';
-
-    supertest(app)
-      .post('/users')
-      .set('Accept', 'application/json')
-      .set('Content-Type', 'application/json')
-      .send({
-        user_name: 'Carolina',
-        password: password
-      })
-      .expect('set-cookie', /token=[a-zA-Z0-9\-_]+\.[a-zA-Z0-9\-_]+\.[a-zA-Z0-9\-_]+; Path=\/;.+HttpOnly/)
-      .expect( (user) => {
-        delete user.body.created_at;
-        delete user.body.updated_at;
-      })
-      .expect(200, {
-        id: 15,
-        user_name: 'Carolina',
-      })
-      .expect('Content-Type', /json/)
-      .end((httpErr, _res) => {
-
-        if (httpErr) {
-          return done(httpErr);
-        }
-
-        knex('users')
-          .where('id', 15)
-          .first()
-          .then((user) => {
-
-            const hashed_password = user.hashed_password;
-
-            delete user.hashed_password;
-            delete user.created_at;
-            delete user.updated_at;
-
-            assert.deepEqual(user,
-              {
-                id: 16,
-                user_name: 'Carolina'
-              });
-
-            // Synchronous password comparison
-            const isMatch = bcrypt.compareSync(password, hashed_password);
-
-            assert.isTrue(isMatch, "passwords don't match");
-            done();
-          })
-          .catch((dbErr) => {
-            done(dbErr);
-          });
-      });
-  });
 });
-
 
 
 

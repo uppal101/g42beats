@@ -54,7 +54,11 @@ function getUserPlaylistByUserId(req, res){
           delete object.user_id;
         });
       }
+<<<<<<< HEAD
       res.status(200).json(usersongs);
+=======
+
+>>>>>>> c39ba99ec10839f4195f2d63f3c706810e8e0c6c
     })
     .catch((err) => {
       console.error(err);
@@ -69,6 +73,7 @@ function getUserPlaylistByUserId(req, res){
       // }
 
 
+<<<<<<< HEAD
 function createUser(req, res, next) {
   let userId
     bcrypt.hash(req.body.password, 12)
@@ -112,6 +117,8 @@ function createUser(req, res, next) {
 
 
 
+=======
+>>>>>>> c39ba99ec10839f4195f2d63f3c706810e8e0c6c
         module.exports.getUserById = function(args, res, next) {
             /**
              * Returns a user name based on the specific id. The user must be authorized to access.
@@ -226,46 +233,9 @@ function createUser(req, res, next) {
             }
         }
 
-        module.exports.userSignIn = function(req, res, next) {
-          console.log(req);
-          let tokenID
-          knex('users')
-          .where('user_name', req.body.user_name)
-          .then(result => {
-            const user = result[0];
-            if (!user) {
-                res.set('Content-type', 'plain/text');
-                res.status(400).send('Bad username or password');
-            } else {
-              const user = result[0];
-              return bcrypt.compare(req.body.password, user.hashed_password);
-            }
-          })
-          .then((loggedInUser) => {
-            console.log("hello");
-            jwt.verify(req.cookies.token, process.env.JWT_KEY, (err, payload) => {
-              if (err) {
-                res.set("Content-Type", "text/plain");
-                return res.status(401).send('Unauthorized');
-              } else {
-              tokenID = claim.userId;
-               next();
-             }
-          })
-          .then((authOK) => {
-            const authorizedUser = {
-              id: user.id,
-              user_name: user.user_name
-            }
-            res.status(200).send(camelizeKeys(authorizedUser));
-          })
-          .catch((err) => {
-            console.error(err)
-          })
-        })
-      }
 
 
+<<<<<<< HEAD
 // //grab username where id === req.params.id
 // function createUser(req, res, next) {
 //     console.log('add user');
@@ -309,6 +279,29 @@ function createUser(req, res, next) {
 //
 //
 
+=======
+
+//
+//         module.exports.getUserById = function(args, res, next) {
+//             /**
+//              * Returns a user name based on the specific id. The user must be authorized to access.
+//              *
+//              * id Long user name with given id to fetch
+//              * returns user_name
+//              **/
+//             var examples = {};
+//             examples['application/json'] = {
+//                 "username": "aeiou"
+//             };
+//             if (Object.keys(examples).length > 0) {
+//                 res.setHeader('Content-Type', 'application/json');
+//                 res.end(JSON.stringify(examples[Object.keys(examples)[0]] || {}, null, 2));
+//             } else {
+//                 res.end();
+//             }
+//         }
+//
+>>>>>>> c39ba99ec10839f4195f2d63f3c706810e8e0c6c
 //
 //         //**********************************************************end of newUser in mifit
 //         module.exports.getUserPlaylistByUserId = function(args, res, next) {
@@ -448,11 +441,15 @@ function createUser(req, res, next) {
 //         }
 
 
+
         module.exports ={
             userById: userById,
             getUserPlaylistByUserId: getUserPlaylistByUserId,
             // getGroupCompiledPlaylist: getGroupCompiledPlaylist
 
+<<<<<<< HEAD
             // createUser : createUser,
             // userSignIn : userSignIn
+=======
+>>>>>>> c39ba99ec10839f4195f2d63f3c706810e8e0c6c
         }
