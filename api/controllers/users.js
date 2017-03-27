@@ -184,42 +184,42 @@ function createUser(req, res, next) {
         }
 
         module.exports.userSignIn = function(req, res, next) {
-          console.log(req);
-          let tokenID
-          knex('users')
-          .where('user_name', req.body.user_name)
-          .then(result => {
-            const user = result[0];
-            if (!user) {
-                res.set('Content-type', 'plain/text');
-                res.status(400).send('Bad username or password');
-            } else {
-              const user = result[0];
-              return bcrypt.compare(req.body.password, user.hashed_password);
-            }
-          })
-          .then((loggedInUser) => {
-            console.log("hello");
-            jwt.verify(req.cookies.token, process.env.JWT_KEY, (err, payload) => {
-              if (err) {
-                res.set("Content-Type", "text/plain");
-                return res.status(401).send('Unauthorized');
-              } else {
-              tokenID = claim.userId;
-               next();
-             }
-          })
-          .then((authOK) => {
-            const authorizedUser = {
-              id: user.id,
-              user_name: user.user_name
-            }
-            res.status(200).send(camelizeKeys(authorizedUser));
-          })
-          .catch((err) => {
-            console.error(err)
-          })
-        })
+        //   console.log(req);
+        //   let tokenID
+        //   knex('users')
+        //   .where('user_name', req.body.user_name)
+        //   .then(result => {
+        //     const user = result[0];
+        //     if (!user) {
+        //         res.set('Content-type', 'plain/text');
+        //         res.status(400).send('Bad username or password');
+        //     } else {
+        //       const user = result[0];
+        //       return bcrypt.compare(req.body.password, user.hashed_password);
+        //     }
+        //   })
+        //   .then((loggedInUser) => {
+        //     console.log("hello");
+        //     jwt.verify(req.cookies.token, process.env.JWT_KEY, (err, payload) => {
+        //       if (err) {
+        //         res.set("Content-Type", "text/plain");
+        //         return res.status(401).send('Unauthorized');
+        //       } else {
+        //       tokenID = claim.userId;
+        //        next();
+        //      }
+        //   })
+        //   .then((authOK) => {
+        //     const authorizedUser = {
+        //       id: user.id,
+        //       user_name: user.user_name
+        //     }
+        //     res.status(200).send(camelizeKeys(authorizedUser));
+        //   })
+        //   .catch((err) => {
+        //     console.error(err)
+        //   })
+        // })
       }
 
 
@@ -250,6 +250,6 @@ function createUser(req, res, next) {
 
         module.exports ={
             createUser : createUser,
-            userSignIn : userSignIn,
+
 
         }
