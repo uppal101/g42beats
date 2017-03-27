@@ -25,49 +25,6 @@ console.log("I'm trying to grab the user byID number the user");
 
 }
 
-//grab username where id === req.params.id
-function createUser(req, res, next) {
-  let userId
-    bcrypt.hash(req.body.password, 12)
-        .then((hashed_password) => {
-                    return knex('users')
-                        .insert({
-                            user_name: req.body.user_name,
-                            hashed_password: hashed_password,
-                            // group_name: req.body.groupname
-                        }, '*');
-        })
-        .then((user) => {
-            let newUser = user[0];
-            const claim = {
-                userId: newUser.id,
-                // permissions: newUser.permissions
-                //NOTE: this will be useful for the superuser.
-            }
-
-            const token = jwt.sign(claim, process.env.JWT_KEY);
-            newUser.token = token
-            delete newUser.hashed_password;
-            res.status(200).send(camelizeKeys(newUser));
-            return newUser;
-        })
-        .then((checkingGroup) => {
-           const id = knex('groups').where('group_name', req.body.groupname).select('id');
-           return id;
-        })
-        .then((insertingGroupMember) => {
-          console.log(checkingGroup);
-          knex('group_members').insert({group_id: insertingGroupMember, user_id: userId})
-        })
-        .catch((err) => {
-            next(err);
-        });
-      }
-
-////
-
-
-
 
         module.exports.getUserById = function(args, res, next) {
             /**
@@ -183,45 +140,6 @@ function createUser(req, res, next) {
             }
         }
 
-        module.exports.userSignIn = function(req, res, next) {
-        //   console.log(req);
-        //   let tokenID
-        //   knex('users')
-        //   .where('user_name', req.body.user_name)
-        //   .then(result => {
-        //     const user = result[0];
-        //     if (!user) {
-        //         res.set('Content-type', 'plain/text');
-        //         res.status(400).send('Bad username or password');
-        //     } else {
-        //       const user = result[0];
-        //       return bcrypt.compare(req.body.password, user.hashed_password);
-        //     }
-        //   })
-        //   .then((loggedInUser) => {
-        //     console.log("hello");
-        //     jwt.verify(req.cookies.token, process.env.JWT_KEY, (err, payload) => {
-        //       if (err) {
-        //         res.set("Content-Type", "text/plain");
-        //         return res.status(401).send('Unauthorized');
-        //       } else {
-        //       tokenID = claim.userId;
-        //        next();
-        //      }
-        //   })
-        //   .then((authOK) => {
-        //     const authorizedUser = {
-        //       id: user.id,
-        //       user_name: user.user_name
-        //     }
-        //     res.status(200).send(camelizeKeys(authorizedUser));
-        //   })
-        //   .catch((err) => {
-        //     console.error(err)
-        //   })
-        // })
-      }
-
 
         exports.deleteSingleUserInGroup = function(args, res, next) {
             /**
@@ -248,8 +166,4 @@ function createUser(req, res, next) {
         }
 
 
-        module.exports ={
-            createUser : createUser,
-
-
-        }
+      

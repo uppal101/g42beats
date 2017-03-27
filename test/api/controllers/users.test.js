@@ -78,9 +78,9 @@ describe('users routes', () => {
       .set('Content-Type', 'application/json')
       .send({
         user_name: 'Carolina',
-        password: password
+        password: password,
+        group_name: 'g42'
       })
-      .expect('set-cookie', /token=[a-zA-Z0-9\-_]+\.[a-zA-Z0-9\-_]+\.[a-zA-Z0-9\-_]+; Path=\/;.+HttpOnly/)
       .expect( (user) => {
         delete user.body.created_at;
         delete user.body.updated_at;
@@ -88,6 +88,7 @@ describe('users routes', () => {
       .expect(200, {
         id: 15,
         user_name: 'Carolina',
+
       })
       .expect('Content-Type', /json/)
       .end((httpErr, _res) => {
@@ -109,7 +110,7 @@ describe('users routes', () => {
 
             assert.deepEqual(user,
               {
-                id: 16,
+                id: 15,
                 user_name: 'Carolina'
               });
 
@@ -126,7 +127,65 @@ describe('users routes', () => {
   });
 });
 
+// userSignIn
 
+// need to test for token
+it('should send response to POST /users/login', (done) => {
+const password = 'thegivenbySanjeet';
+
+supertest(app)
+  .post('/users')
+  .set('Accept', 'application/json')
+  .set('Content-Type', 'application/json')
+  .send({
+    user_name: 'Carolina',
+    password: password,
+    group_name: 'g42'
+  })
+  .expect( (user) => {
+    delete user.body.created_at;
+    delete user.body.updated_at;
+  })
+  .expect(200, {
+    id: 15,
+    user_name: 'Carolina',
+
+  })
+  .expect('Content-Type', /json/)
+  .end((httpErr, _res) => {
+
+    if (httpErr) {
+      return done(httpErr);
+    }
+
+    knex('users')
+      .where('id', 15)
+      .first()
+      .then((user) => {
+
+        const hashed_password = user.hashed_password;
+
+        delete user.hashed_password;
+        delete user.created_at;
+        delete user.updated_at;
+
+        assert.deepEqual(user,
+          {
+            id: 15,
+            user_name: 'Carolina'
+          });
+
+        // Synchronous password comparison
+        const isMatch = bcrypt.compareSync(password, hashed_password);
+
+        assert.isTrue(isMatch, "passwords don't match");
+        done();
+      })
+      .catch((dbErr) => {
+        done(dbErr);
+      });
+  });
+});
 
 
 
