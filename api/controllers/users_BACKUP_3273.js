@@ -54,16 +54,12 @@ function getUserPlaylistByUserId(req, res){
           delete object.user_id;
         });
       }
-<<<<<<< HEAD
       res.status(200).json(usersongs);
-=======
-
->>>>>>> c39ba99ec10839f4195f2d63f3c706810e8e0c6c
     })
     .catch((err) => {
       console.error(err);
     })
-<<<<<<< HEAD
+
 }
 
 
@@ -74,7 +70,7 @@ function getUserPlaylistByUserId(req, res){
       // }
 
 
-<<<<<<< HEAD
+//Sanjeet
 function createUser(req, res, next) {
   let userId
     bcrypt.hash(req.body.password, 12)
@@ -93,9 +89,6 @@ function createUser(req, res, next) {
                 // permissions: newUser.permissions
                 //NOTE: this will be useful for the superuser.
             }
-=======
->>>>>>> 509c9cd264e0f2518fd2ddb2f76985f2b6125a29
-
             const token = jwt.sign(claim, process.env.JWT_KEY);
             newUser.token = token
             delete newUser.hashed_password;
@@ -114,62 +107,6 @@ function createUser(req, res, next) {
             next(err);
         });
       }
-
-
-
-
-
-
-=======
->>>>>>> c39ba99ec10839f4195f2d63f3c706810e8e0c6c
-        module.exports.getUserById = function(args, res, next) {
-            /**
-             * Returns a user name based on the specific id. The user must be authorized to access.
-             *
-             * id Long user name with given id to fetch
-             * returns user_name
-             **/
-            var examples = {};
-            examples['application/json'] = {
-                "username": "aeiou"
-            };
-            if (Object.keys(examples).length > 0) {
-                res.setHeader('Content-Type', 'application/json');
-                res.end(JSON.stringify(examples[Object.keys(examples)[0]] || {}, null, 2));
-            } else {
-                res.end();
-            }
-        }
-
-
-
-        //**********************************************************end of newUser in mifit
-        module.exports.getUserPlaylistByUserId = function(args, res, next) {
-            /**
-             * Returns the list of songs that belong to a user with the specified id.
-             *
-             * id Long Fetch playlist with songs associated with signed in user id.
-             * returns playlist
-             **/
-
-
-
-            var examples = {};
-            examples['application/json'] = {
-                "songs": [{
-                    "artistname": "aeiou",
-                    "songid": 123456789,
-                    "userid": 123456789,
-                    "songname": "aeiou"
-                }]
-            };
-            if (Object.keys(examples).length > 0) {
-                res.setHeader('Content-Type', 'application/json');
-                res.end(JSON.stringify(examples[Object.keys(examples)[0]] || {}, null, 2));
-            } else {
-                res.end();
-            }
-        }
 
         module.exports.getGroupsPerUser = function(args, res, next) {
             /**
@@ -238,7 +175,6 @@ function createUser(req, res, next) {
 
 
 
-<<<<<<< HEAD
 // //grab username where id === req.params.id
 // function createUser(req, res, next) {
 //     console.log('add user');
@@ -282,30 +218,9 @@ function createUser(req, res, next) {
 //
 //
 
-=======
 
-//
-//         module.exports.getUserById = function(args, res, next) {
-//             /**
-//              * Returns a user name based on the specific id. The user must be authorized to access.
-//              *
-//              * id Long user name with given id to fetch
-//              * returns user_name
-//              **/
-//             var examples = {};
-//             examples['application/json'] = {
-//                 "username": "aeiou"
-//             };
-//             if (Object.keys(examples).length > 0) {
-//                 res.setHeader('Content-Type', 'application/json');
-//                 res.end(JSON.stringify(examples[Object.keys(examples)[0]] || {}, null, 2));
-//             } else {
-//                 res.end();
-//             }
-//         }
-//
->>>>>>> c39ba99ec10839f4195f2d63f3c706810e8e0c6c
-//
+
+
 //         //**********************************************************end of newUser in mifit
 //         module.exports.getUserPlaylistByUserId = function(args, res, next) {
 //             /**
@@ -449,10 +364,4 @@ function createUser(req, res, next) {
             userById: userById,
             getUserPlaylistByUserId: getUserPlaylistByUserId,
             // getGroupCompiledPlaylist: getGroupCompiledPlaylist
-
-<<<<<<< HEAD
-            // createUser : createUser,
-            // userSignIn : userSignIn
-=======
->>>>>>> c39ba99ec10839f4195f2d63f3c706810e8e0c6c
         }

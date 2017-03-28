@@ -54,27 +54,15 @@ function getUserPlaylistByUserId(req, res){
           delete object.user_id;
         });
       }
-<<<<<<< HEAD
-      res.status(200).json(usersongs);
-=======
-
->>>>>>> c39ba99ec10839f4195f2d63f3c706810e8e0c6c
     })
     .catch((err) => {
       console.error(err);
     })
-<<<<<<< HEAD
 }
 
 
-// function getUserPlaylistByGroupIdandUserId(req, res) {
-//   let gid = req.swagger.params.id.value;
-//   knex('oups')
-// }
-      // }
 
 
-<<<<<<< HEAD
 function createUser(req, res, next) {
   let userId
     bcrypt.hash(req.body.password, 12)
@@ -93,8 +81,6 @@ function createUser(req, res, next) {
                 // permissions: newUser.permissions
                 //NOTE: this will be useful for the superuser.
             }
-=======
->>>>>>> 509c9cd264e0f2518fd2ddb2f76985f2b6125a29
 
             const token = jwt.sign(claim, process.env.JWT_KEY);
             newUser.token = token
@@ -120,8 +106,7 @@ function createUser(req, res, next) {
 
 
 
-=======
->>>>>>> c39ba99ec10839f4195f2d63f3c706810e8e0c6c
+
         module.exports.getUserById = function(args, res, next) {
             /**
              * Returns a user name based on the specific id. The user must be authorized to access.
@@ -238,8 +223,8 @@ function createUser(req, res, next) {
 
 
 
-<<<<<<< HEAD
-// //grab username where id === req.params.id
+
+
 // function createUser(req, res, next) {
 //     console.log('add user');
 //
@@ -275,15 +260,6 @@ function createUser(req, res, next) {
 //                 });
 //         });
 // };
-// ////
-//
-//
-//
-//
-//
-
-=======
-
 //
 //         module.exports.getUserById = function(args, res, next) {
 //             /**
@@ -304,7 +280,6 @@ function createUser(req, res, next) {
 //             }
 //         }
 //
->>>>>>> c39ba99ec10839f4195f2d63f3c706810e8e0c6c
 //
 //         //**********************************************************end of newUser in mifit
 //         module.exports.getUserPlaylistByUserId = function(args, res, next) {
@@ -449,10 +424,4 @@ function createUser(req, res, next) {
             userById: userById,
             getUserPlaylistByUserId: getUserPlaylistByUserId,
             // getGroupCompiledPlaylist: getGroupCompiledPlaylist
-
-<<<<<<< HEAD
-            // createUser : createUser,
-            // userSignIn : userSignIn
-=======
->>>>>>> c39ba99ec10839f4195f2d63f3c706810e8e0c6c
-        }
+          }
