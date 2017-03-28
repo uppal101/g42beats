@@ -109,35 +109,6 @@ function getUserPlaylistByUserId(req, res){
         }
 
 
-
-        //**********************************************************end of newUser in mifit
-        module.exports.getUserPlaylistByUserId = function(args, res, next) {
-            /**
-             * Returns the list of songs that belong to a user with the specified id.
-             *
-             * id Long Fetch playlist with songs associated with signed in user id.
-             * returns playlist
-             **/
-
-
-
-            var examples = {};
-            examples['application/json'] = {
-                "songs": [{
-                    "artistname": "aeiou",
-                    "songid": 123456789,
-                    "userid": 123456789,
-                    "songname": "aeiou"
-                }]
-            };
-            if (Object.keys(examples).length > 0) {
-                res.setHeader('Content-Type', 'application/json');
-                res.end(JSON.stringify(examples[Object.keys(examples)[0]] || {}, null, 2));
-            } else {
-                res.end();
-            }
-        }
-
         module.exports.getGroupsPerUser = function(args, res, next) {
             /**
              * Gets all groups that belong to a certain user.

@@ -107,27 +107,42 @@ describe('POST /users', () => {
 
   // userSignIn
 
-  // need to test for token
+  // do I need to compare passwords first?
+let token = '';
 describe('POST users/login', () => {
-  it('should send response to POST /users/login', (done) => {
-  const password = 'thegivenbySanjeet';
-
+  it('should create and send a token', (done) => {
     supertest(app)
-    .post('/users')
+    .post('/users/login')
     .set('Accept', 'application/json')
     .set('Content-Type', 'application/json')
     .send({
-      user_name: 'Carolina',
-      password: password,
-      group_name: 'g42'
+      user_name: 'SanjeetUppal',
+      password: g42beats
+    })
+    .end((err, res) => {
+      expect(res.body.token)
+      token = res.body.token;
+    })
+    done();
+  })
+  it('should send an object with users information', (done) => {
+
+    supertest(app)
+    .post('/users/login')
+    .set('Accept', 'application/json')
+    .set('Content-Type', 'application/json')
+    .send({
+      user_name: 'SanjeetUppal',
+      password: g42beats
     })
     .expect( (user) => {
       delete user.body.created_at;
       delete user.body.updated_at;
     })
     .expect(200, {
-      id: 15,
-      user_name: 'Carolina',
+      id: 4,
+      user_name: 'SanjeetUppal',
+      token: token
     })
     .expect('Content-Type', /json/)
     .end((httpErr, _res) => {
@@ -137,7 +152,7 @@ describe('POST users/login', () => {
     }
 
     knex('users')
-      .where('id', 15)
+      .where('id', 4)
       .first()
       .then((user) => {
 
@@ -149,8 +164,9 @@ describe('POST users/login', () => {
 
       assert.deepEqual(user,
         {
-          id: 15,
-          user_name: 'Carolina'
+          id: 4,
+          user_name: 'SanjeetUppal'
+          //token: token
         });
 
       // Synchronous password comparison
