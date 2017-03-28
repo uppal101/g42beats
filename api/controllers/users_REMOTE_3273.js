@@ -1,5 +1,9 @@
 'use strict';
 
+//users
+//songs
+//playlist
+//goups_users table
 const knex = require('../../knex');
 const bcrypt = require('bcrypt-as-promised');
 const jwt = require('jsonwebtoken');
@@ -9,13 +13,13 @@ const {
     camelizeKeys,
     decamelizeKeys
 } = require('humps');
-//Ivonne
+
  function userById(req, res) {
    let paramId = req.swagger.params.id.value
   //  console.log(id);
    knex('users')
    .where('id', paramId)
-   .then(user=> {
+   .then((user)=> {
      if(!user) {
        res.status(404).json('Not Found');
      } else {
@@ -23,15 +27,18 @@ const {
        delete user[0].created_at;
        delete user[0].updated_at;
        console.log(user);
+
      }
      res.status(200).json(user);
    })
-   .catch(err => {
+   .catch((err) => {
      console.error(err);
-   });
+   })
+  //  .finally(()=> {
+   //
+  //  })
 }
 
-// grab user playlist Ivonne
 function getUserPlaylistByUserId(req, res){
   let userId = req.swagger.params.id.value;
   knex('users')
@@ -59,82 +66,9 @@ function getUserPlaylistByUserId(req, res){
     .catch((err) => {
       console.error(err);
     })
-}
-
-
-// function getUserPlaylistByGroupIdandUserId(req, res) {
-//   let gid = req.swagger.params.id.value;
-//   knex('oups')
-// }
-      // }
 
 
 
-function createUser(req, res, next) {
-  let userId
-    bcrypt.hash(req.body.password, 12)
-        .then((hashed_password) => {
-          return knex('users')
-              .insert({
-                  user_name: req.body.user_name,
-                  hashed_password: hashed_password,
-                  // group_name: req.body.groupname
-              }, '*');
-        })
-        .then((user) => {
-            let newUser = user[0];
-            const claim = {
-                userId: newUser.id,
-                // permissions: newUser.permissions
-                //NOTE: this will be useful for the superuser.
-            }
-            const token = jwt.sign(claim, process.env.JWT_KEY);
-            newUser.token = token
-            delete newUser.hashed_password;
-            res.status(200).send(camelizeKeys(newUser));
-            return newUser;
-        })
-        .then((checkingGroup) => {
-           const id = knex('groups').where('group_name', req.body.groupname).select('id');
-           return id;
-        })
-        .then((insertingGroupMember) => {
-          console.log(checkingGroup);
-          knex('group_members').insert({group_id: insertingGroupMember, user_id: userId})
-        })
-        .catch((err) => {
-            next(err);
-        });
-      }
-
-
-        //**********************************************************end of newUser in mifit
-        module.exports.getUserPlaylistByUserId = function(args, res, next) {
-            /**
-             * Returns the list of songs that belong to a user with the specified id.
-             *
-             * id Long Fetch playlist with songs associated with signed in user id.
-             * returns playlist
-             **/
-
-
-
-            var examples = {};
-            examples['application/json'] = {
-                "songs": [{
-                    "artistname": "aeiou",
-                    "songid": 123456789,
-                    "userid": 123456789,
-                    "songname": "aeiou"
-                }]
-            };
-            if (Object.keys(examples).length > 0) {
-                res.setHeader('Content-Type', 'application/json');
-                res.end(JSON.stringify(examples[Object.keys(examples)[0]] || {}, null, 2));
-            } else {
-                res.end();
-            }
-        }
 
         module.exports.getGroupsPerUser = function(args, res, next) {
             /**
@@ -202,6 +136,28 @@ function createUser(req, res, next) {
         }
 
 
+
+
+//
+//         module.exports.getUserById = function(args, res, next) {
+//             /**
+//              * Returns a user name based on the specific id. The user must be authorized to access.
+//              *
+//              * id Long user name with given id to fetch
+//              * returns user_name
+//              **/
+//             var examples = {};
+//             examples['application/json'] = {
+//                 "username": "aeiou"
+//             };
+//             if (Object.keys(examples).length > 0) {
+//                 res.setHeader('Content-Type', 'application/json');
+//                 res.end(JSON.stringify(examples[Object.keys(examples)[0]] || {}, null, 2));
+//             } else {
+//                 res.end();
+//             }
+//         }
+//
 //
 //         //**********************************************************end of newUser in mifit
 //         module.exports.getUserPlaylistByUserId = function(args, res, next) {
@@ -344,6 +300,6 @@ function createUser(req, res, next) {
 
         module.exports ={
             userById: userById,
-            getUserPlaylistByUserId: getUserPlaylistByUserId,
+            getUserPlaylistByUserId: getUserPlaylistByUserId
             // getGroupCompiledPlaylist: getGroupCompiledPlaylist
         }

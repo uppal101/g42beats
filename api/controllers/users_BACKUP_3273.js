@@ -59,6 +59,7 @@ function getUserPlaylistByUserId(req, res){
     .catch((err) => {
       console.error(err);
     })
+
 }
 
 
@@ -69,7 +70,7 @@ function getUserPlaylistByUserId(req, res){
       // }
 
 
-
+//Sanjeet
 function createUser(req, res, next) {
   let userId
     bcrypt.hash(req.body.password, 12)
@@ -106,35 +107,6 @@ function createUser(req, res, next) {
             next(err);
         });
       }
-
-
-        //**********************************************************end of newUser in mifit
-        module.exports.getUserPlaylistByUserId = function(args, res, next) {
-            /**
-             * Returns the list of songs that belong to a user with the specified id.
-             *
-             * id Long Fetch playlist with songs associated with signed in user id.
-             * returns playlist
-             **/
-
-
-
-            var examples = {};
-            examples['application/json'] = {
-                "songs": [{
-                    "artistname": "aeiou",
-                    "songid": 123456789,
-                    "userid": 123456789,
-                    "songname": "aeiou"
-                }]
-            };
-            if (Object.keys(examples).length > 0) {
-                res.setHeader('Content-Type', 'application/json');
-                res.end(JSON.stringify(examples[Object.keys(examples)[0]] || {}, null, 2));
-            } else {
-                res.end();
-            }
-        }
 
         module.exports.getGroupsPerUser = function(args, res, next) {
             /**
@@ -202,7 +174,53 @@ function createUser(req, res, next) {
         }
 
 
+
+// //grab username where id === req.params.id
+// function createUser(req, res, next) {
+//     console.log('add user');
 //
+//     bcrypt.hash(req.body.password, 12)
+//         .then((hashed_password) => {
+//             return knex('users')
+//                 .then((user) => {
+//                     return knex('users')
+//                         .insert({
+//                             user_name: req.body.username,
+//                             hashed_password: hashed_password
+//                         }, '*');
+//                 })
+//                 .then((user) => {
+//                     const newUser = result[0];
+//                     const claim = {
+//                         userId: newUser.id,
+//                         // permissions: newUser.permissions
+//                         //NOTE: this will be useful for the superuser.
+//                     };
+//                     const token = jwt.sign(claim, process.env.JWT_KEY);
+//                     res.cookie('token', token, {
+//                         httpOnly: true
+//                     });
+//                 })
+//                 .then((users) => {
+//                     const user = users[0];
+//                     delete user.hashed_password;
+//                     res.send(camelizeKeys(user));
+//                 })
+//                 .catch((err) => {
+//                     next(err);
+//                 });
+//         });
+// };
+// ////
+//
+//
+//
+//
+//
+
+
+
+
 //         //**********************************************************end of newUser in mifit
 //         module.exports.getUserPlaylistByUserId = function(args, res, next) {
 //             /**
