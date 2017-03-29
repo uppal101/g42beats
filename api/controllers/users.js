@@ -108,24 +108,7 @@ function createUser(req, res, next) {
         });
 }
 
-function getUsersInGroup(){
-  let groupId = req.swagger.params.gid.value;
 
-  knex('groups')
-  .join('group_members', 'groups.id', '=', 'group_members.group_id')
-  .join('users', 'group_members.user_id', '=', 'users.id')
-  .select()
-  .where('group_id', gid)
-  console.log("I'm here")
-  .then(usersInGroup => {
-    console.log(usersInGroup.id)
-    console.log("this is where the groupsId should be");;
-    res.status(200).json(UsersInGroup);
-  })
-  .catch(err => {
-    console.error(err);
-  })
-}
 
         // module.exports.getGroupsPerUser = function(args, res, next) {
         //     /**
