@@ -107,70 +107,70 @@ function createUser(req, res, next) {
         });
       }
 
-        module.exports.getGroupsPerUser = function(args, res, next) {
-            /**
-             * Gets all groups that belong to a certain user.
-             *
-             * id Long Returns a user associated with that id
-             * returns List
-             **/
-            var examples = {};
-            examples['application/json'] = [{
-                "group_name": "aeiou"
-            }];
-            if (Object.keys(examples).length > 0) {
-                res.setHeader('Content-Type', 'application/json');
-                res.end(JSON.stringify(examples[Object.keys(examples)[0]] || {}, null, 2));
-            } else {
-                res.end();
-            }
-        }
-        //BREAK WEEK : how to better organize relationship database to include user from
-        // multiple groups. eg: instructor in multiple groups.
-
-        module.exports.addSong = function(args, res, next) {
-            /**
-             * Add a song to authorized user's personal playlist.
-             *
-             * id Long Return an individual associated with that id
-             * song Addsong Name of song with artist user wants to add
-             * returns addsong
-             **/
-            var examples = {};
-            examples['application/json'] = {
-                "song": "aeiou",
-                "userid": 123456789
-            };
-            if (Object.keys(examples).length > 0) {
-                res.setHeader('Content-Type', 'application/json');
-                res.end(JSON.stringify(examples[Object.keys(examples)[0]] || {}, null, 2));
-            } else {
-                res.end();
-            }
-        }
-
-        module.exports.deleteSong = function(args, res, next) {
-            /**
-             * Delete a song to authorized user's personal playlist.
-             *
-             * id Long Return an individual associated with that id
-             * sid Long Id associated with song selected
-             * returns song
-             **/
-            var examples = {};
-            examples['application/json'] = {
-                "artistname": "aeiou",
-                "songid": 123456789,
-                "userid": 123456789,
-                "songname": "aeiou"
-            };
-            if (Object.keys(examples).length > 0) {
-                res.setHeader('Content-Type', 'application/json');
-                res.end(JSON.stringify(examples[Object.keys(examples)[0]] || {}, null, 2));
-            } else {
-                res.end();
-            }
-        }
+        // module.exports.getGroupsPerUser = function(args, res, next) {
+        //     /**
+        //      * Gets all groups that belong to a certain user.
+        //      *
+        //      * id Long Returns a user associated with that id
+        //      * returns List
+        //      **/
+        //     var examples = {};
+        //     examples['application/json'] = [{
+        //         "group_name": "aeiou"
+        //     }];
+        //     if (Object.keys(examples).length > 0) {
+        //         res.setHeader('Content-Type', 'application/json');
+        //         res.end(JSON.stringify(examples[Object.keys(examples)[0]] || {}, null, 2));
+        //     } else {
+        //         res.end();
+        //     }
+        // }
+        // //BREAK WEEK : how to better organize relationship database to include user from
+        // // multiple groups. eg: instructor in multiple groups.
+        //
+        // module.exports.addSong = function(args, res, next) {
+        //     /**
+        //      * Add a song to authorized user's personal playlist.
+        //      *
+        //      * id Long Return an individual associated with that id
+        //      * song Addsong Name of song with artist user wants to add
+        //      * returns addsong
+        //      **/
+        //     var examples = {};
+        //     examples['application/json'] = {
+        //         "song": "aeiou",
+        //         "userid": 123456789
+        //     };
+        //     if (Object.keys(examples).length > 0) {
+        //         res.setHeader('Content-Type', 'application/json');
+        //         res.end(JSON.stringify(examples[Object.keys(examples)[0]] || {}, null, 2));
+        //     } else {
+        //         res.end();
+        //     }
+        // }
+        //
+        // module.exports.deleteSong = function(args, res, next) {
+        //     /**
+        //      * Delete a song to authorized user's personal playlist.
+        //      *
+        //      * id Long Return an individual associated with that id
+        //      * sid Long Id associated with song selected
+        //      * returns song
+        //      **/
+        //     var examples = {};
+        //     examples['application/json'] = {
+        //         "artistname": "aeiou",
+        //         "songid": 123456789,
+        //         "userid": 123456789,
+        //         "songname": "aeiou"
+        //     };
+        //     if (Object.keys(examples).length > 0) {
+        //         res.setHeader('Content-Type', 'application/json');
+        //         res.end(JSON.stringify(examples[Object.keys(examples)[0]] || {}, null, 2));
+        //     } else {
+        //         res.end();
+        //     }
+        // }
 
 
 //
