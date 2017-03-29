@@ -17,6 +17,7 @@ const {
    .where('id', paramId)
    .then(user=> {
      if(!user) {
+       console.log("this is the user i see first", user);
        res.status(404).json('Not Found');
      } else {
        delete user[0].hashed_password;
@@ -105,72 +106,91 @@ function createUser(req, res, next) {
         .catch((err) => {
             next(err);
         });
-      }
+}
 
-        module.exports.getGroupsPerUser = function(args, res, next) {
-            /**
-             * Gets all groups that belong to a certain user.
-             *
-             * id Long Returns a user associated with that id
-             * returns List
-             **/
-            var examples = {};
-            examples['application/json'] = [{
-                "group_name": "aeiou"
-            }];
-            if (Object.keys(examples).length > 0) {
-                res.setHeader('Content-Type', 'application/json');
-                res.end(JSON.stringify(examples[Object.keys(examples)[0]] || {}, null, 2));
-            } else {
-                res.end();
-            }
-        }
-        //BREAK WEEK : how to better organize relationship database to include user from
-        // multiple groups. eg: instructor in multiple groups.
+function getUsersInGroup(){
+  let groupId = req.swagger.params.gid.value;
 
-        module.exports.addSong = function(args, res, next) {
-            /**
-             * Add a song to authorized user's personal playlist.
-             *
-             * id Long Return an individual associated with that id
-             * song Addsong Name of song with artist user wants to add
-             * returns addsong
-             **/
-            var examples = {};
-            examples['application/json'] = {
-                "song": "aeiou",
-                "userid": 123456789
-            };
-            if (Object.keys(examples).length > 0) {
-                res.setHeader('Content-Type', 'application/json');
-                res.end(JSON.stringify(examples[Object.keys(examples)[0]] || {}, null, 2));
-            } else {
-                res.end();
-            }
-        }
+  knex('groups')
+  .join('group_members', 'groups.id', '=', 'group_members.group_id')
+  .join('users', 'group_members.user_id', '=', 'users.id')
+  .select()
+  .where('group_id', gid)
+  console.log("I'm here")
+  .then(usersInGroup => {
+    console.log(usersInGroup.id)
+    console.log("this is where the groupsId should be");;
+    res.status(200).json(UsersInGroup);
+  })
+  .catch(err => {
+    console.error(err);
+  })
+}
 
-        module.exports.deleteSong = function(args, res, next) {
-            /**
-             * Delete a song to authorized user's personal playlist.
-             *
-             * id Long Return an individual associated with that id
-             * sid Long Id associated with song selected
-             * returns song
-             **/
-            var examples = {};
-            examples['application/json'] = {
-                "artistname": "aeiou",
-                "songid": 123456789,
-                "userid": 123456789,
-                "songname": "aeiou"
-            };
-            if (Object.keys(examples).length > 0) {
-                res.setHeader('Content-Type', 'application/json');
-                res.end(JSON.stringify(examples[Object.keys(examples)[0]] || {}, null, 2));
-            } else {
-                res.end();
-            }
-        }
+        // module.exports.getGroupsPerUser = function(args, res, next) {
+        //     /**
+        //      * Gets all groups that belong to a certain user.
+        //      *
+        //      * id Long Returns a user associated with that id
+        //      * returns List
+        //      **/
+        //     var examples = {};
+        //     examples['application/json'] = [{
+        //         "group_name": "aeiou"
+        //     }];
+        //     if (Object.keys(examples).length > 0) {
+        //         res.setHeader('Content-Type', 'application/json');
+        //         res.end(JSON.stringify(examples[Object.keys(examples)[0]] || {}, null, 2));
+        //     } else {
+        //         res.end();
+        //     }
+        // }
+        // //BREAK WEEK : how to better organize relationship database to include user from
+        // // multiple groups. eg: instructor in multiple groups.
+        //
+        // module.exports.addSong = function(args, res, next) {
+        //     /**
+        //      * Add a song to authorized user's personal playlist.
+        //      *
+        //      * id Long Return an individual associated with that id
+        //      * song Addsong Name of song with artist user wants to add
+        //      * returns addsong
+        //      **/
+        //     var examples = {};
+        //     examples['application/json'] = {
+        //         "song": "aeiou",
+        //         "userid": 123456789
+        //     };
+        //     if (Object.keys(examples).length > 0) {
+        //         res.setHeader('Content-Type', 'application/json');
+        //         res.end(JSON.stringify(examples[Object.keys(examples)[0]] || {}, null, 2));
+        //     } else {
+        //         res.end();
+        //     }
+        // }
+        //
+        // module.exports.deleteSong = function(args, res, next) {
+        //     /**
+        //      * Delete a song to authorized user's personal playlist.
+        //      *
+        //      * id Long Return an individual associated with that id
+        //      * sid Long Id associated with song selected
+        //      * returns song
+        //      **/
+        //     var examples = {};
+        //     examples['application/json'] = {
+        //         "artistname": "aeiou",
+        //         "songid": 123456789,
+        //         "userid": 123456789,
+        //         "songname": "aeiou"
+        //     };
+        //     if (Object.keys(examples).length > 0) {
+        //         res.setHeader('Content-Type', 'application/json');
+        //         res.end(JSON.stringify(examples[Object.keys(examples)[0]] || {}, null, 2));
+        //     } else {
+        //         res.end();
+        //     }
+        // }
 
 
 //
