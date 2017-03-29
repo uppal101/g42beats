@@ -17,6 +17,7 @@ const {
    .where('id', paramId)
    .then(user=> {
      if(!user) {
+       console.log("this is the user i see first", user);
        res.status(404).json('Not Found');
      } else {
        delete user[0].hashed_password;
@@ -105,7 +106,26 @@ function createUser(req, res, next) {
         .catch((err) => {
             next(err);
         });
-      }
+}
+
+function getUsersInGroup(){
+  let groupId = req.swagger.params.gid.value;
+
+  knex('groups')
+  .join('group_members', 'groups.id', '=', 'group_members.group_id')
+  .join('users', 'group_members.user_id', '=', 'users.id')
+  .select()
+  .where('group_id', gid)
+  console.log("I'm here")
+  .then(usersInGroup => {
+    console.log(usersInGroup.id)
+    console.log("this is where the groupsId should be");;
+    res.status(200).json(UsersInGroup);
+  })
+  .catch(err => {
+    console.error(err);
+  })
+}
 
         // module.exports.getGroupsPerUser = function(args, res, next) {
         //     /**
