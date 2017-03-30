@@ -154,7 +154,7 @@ paths:
   #           $ref: "#/definitions/errorModel"
 
   # /groups/{gid}/group_members/users/{id}:
-  
+
   #   x-swagger-router-controller: groups
   #   get:
   #     description: Gets an individual user that belongs to a certain group.
@@ -315,7 +315,7 @@ paths:
         description: Id associated with song selected
         required: true
         type: integer
-        format: int64
+        format: int64f
       - name: song
         in: body
         description: Name of song with artist user wants to add
@@ -399,7 +399,7 @@ definitions:
         type: string
       artistname:
         type: string
-        
+
   deletesong:
     type: object
     required:
@@ -412,7 +412,7 @@ definitions:
       song:
         type: string
       artist:
-        type: string  
+        type: string
 
   addsong:
     type: object
@@ -426,7 +426,7 @@ definitions:
       song:
         type: string
       artist:
-        type: string  
+        type: string
 
   adduser:
     type: object
@@ -441,7 +441,7 @@ definitions:
         type: "string"
       group_name:
         type: "string"
-        
+
   adduserresponse:
     type: object
     required:
@@ -456,7 +456,7 @@ definitions:
       userid:
         type: integer
         format: int64
-   
+
   loginresponse:
     type: object
     required:
@@ -471,7 +471,7 @@ definitions:
         format: int64
       token:
         type: "string"
-  
+
   userlogin:
     type: object
     required:
@@ -482,7 +482,7 @@ definitions:
         type: string
       password:
         type: string
-  
+
   username:
     type: object
     required:
@@ -494,7 +494,7 @@ definitions:
       userid:
         type: integer
         format: int64
-      
+
 
   errorModel:
     type: object

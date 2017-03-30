@@ -53,6 +53,8 @@ function getUserPlaylistByUserId(req, res){
           delete object.created_at;
           delete object.hashed_password;
           delete object.user_id;
+          delete object.id;
+          delete object.user_name;
         });
       }
       res.status(200).json(usersongs);
@@ -131,33 +133,61 @@ function getGroupsPerUser(req, res){
 }
 //Partly working. need to also insert the songId into the dt and playlist.
 function addSong(req, res) {
-  let user = req.body.user_name;
+  let userName = req.body.user_name;
   let songName = req.body.song;
   let artistName = req.body.artist;
+  let userId = req.swagger.params.id.value;
+
   knex('songs')
-  .insert({
-    song_name: songName,
-    artist: artistName
-  }, '*')
-  //srill working through this part.
-  // .select('id')
-  // .where( {
-  //   song_name: songName,
-  //   artit: artistName
-  // })
-  // .insert({
-  //
-  // })
-  .then((songToAdd) => {
-    console.log(songToAdd);
-    res.send(songToAdd[0]);
+  .select()
+  .where('song_name', songName)
+  .where('artist', artistName)
+  .first()
+  .then((song) => {
+    if(song){
+      let data =    {
+         song_id: song.id,
+         user_id: userId
+        }
+      knex('playlist')
+     .insert(data,'*')
+      .then(()=> {
+        res.send(200, data);
+      })
+    } else {
+      knex('songs')
+      .insert({
+        song_name: songName,
+        artist: artistName
+      }, '*')
+      .then((songToAdd) => {
+        knex('playlist')
+        .insert({
+          user_id: userId,
+          song_id: songToAdd[0].id
+        }, '*')
+        return songToAdd;
+      })
+        .then((songToAdd)=> {
+            res.send(200, songToAdd);
+        })
+    }
+  })
+  .then((addedSong) => {
+    console.log(addedSong);
+    // res.send(addedSong);
   })
   .catch((err) => {
     console.error(err);
   })
 }
 
+
+
 // function deleteSong(){}
+
+
+
 
 //example of Delete User Try this for my user.
 
