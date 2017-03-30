@@ -11,8 +11,7 @@ const {
 } = require('humps');
 //Ivonne
  function userById(req, res) {
-   let paramId = req.swagger.params.id.value
-  //  console.log(id);
+   let paramId = req.swagger.params.id.value;
    knex('users')
    .where('id', paramId)
    .then(user=> {
@@ -23,6 +22,8 @@ const {
        delete user[0].hashed_password;
        delete user[0].created_at;
        delete user[0].updated_at;
+       delete user[0].id;
+       delete user[0].user_name;
        console.log(user);
      }
      res.status(200).json(user);
@@ -43,7 +44,6 @@ function getUserPlaylistByUserId(req, res){
     .then((usersongs) => {
       console.log(usersongs);
       if(!usersongs){
-      //   // console.log(userssongs);
         res.status(404).json('Not Found');
       } else {
         usersongs.map(function(object){
@@ -61,7 +61,6 @@ function getUserPlaylistByUserId(req, res){
       console.error(err);
     })
 }
-
 
 // function getUserPlaylistByGroupIdandUserId(req, res) {
 //   let gid = req.swagger.params.id.value;
@@ -108,233 +107,85 @@ function createUser(req, res, next) {
         });
 }
 
-function getUsersInGroup(){
-  let groupId = req.swagger.params.gid.value;
-
+function getGroupsPerUser(req, res){
+  let userId = req.swagger.params.id.value;
   knex('groups')
-  .join('group_members', 'groups.id', '=', 'group_members.group_id')
-  .join('users', 'group_members.user_id', '=', 'users.id')
+  .join('group_members','groups.id', '=', 'group_members.group_id')
   .select()
-  .where('group_id', gid)
-  console.log("I'm here")
-  .then(usersInGroup => {
-    console.log(usersInGroup.id)
-    console.log("this is where the groupsId should be");;
-    res.status(200).json(UsersInGroup);
+  .where('user_id', userId)
+    .then((userGroups) => {
+      if(!userGroups){
+        res.status(404).json('Not Found');
+      } else {
+        delete userGroups[0].created_at;
+        delete userGroups[0].updated_at;
+        delete userGroups[0].group_id;
+        delete userGroups[0].user_id;
+        delete userGroups[0].id;
+      }
+      res.status(200).json(userGroups);
+    })
+    .catch((err) => {
+      console.error(err);
+    })
+}
+//Partly working. need to also insert the songId into the dt and playlist.
+function addSong(req, res) {
+  let user = req.body.user_name;
+  let songName = req.body.song;
+  let artistName = req.body.artist;
+  knex('songs')
+  .insert({
+    song_name: songName,
+    artist: artistName
+  }, '*')
+  //srill working through this part.
+  // .select('id')
+  // .where( {
+  //   song_name: songName,
+  //   artit: artistName
+  // })
+  // .insert({
+  //
+  // })
+  .then((songToAdd) => {
+    console.log(songToAdd);
+    res.send(songToAdd[0]);
   })
-  .catch(err => {
+  .catch((err) => {
     console.error(err);
   })
 }
 
-        // module.exports.getGroupsPerUser = function(args, res, next) {
-        //     /**
-        //      * Gets all groups that belong to a certain user.
-        //      *
-        //      * id Long Returns a user associated with that id
-        //      * returns List
-        //      **/
-        //     var examples = {};
-        //     examples['application/json'] = [{
-        //         "group_name": "aeiou"
-        //     }];
-        //     if (Object.keys(examples).length > 0) {
-        //         res.setHeader('Content-Type', 'application/json');
-        //         res.end(JSON.stringify(examples[Object.keys(examples)[0]] || {}, null, 2));
-        //     } else {
-        //         res.end();
-        //     }
-        // }
-        // //BREAK WEEK : how to better organize relationship database to include user from
-        // // multiple groups. eg: instructor in multiple groups.
-        //
-        // module.exports.addSong = function(args, res, next) {
-        //     /**
-        //      * Add a song to authorized user's personal playlist.
-        //      *
-        //      * id Long Return an individual associated with that id
-        //      * song Addsong Name of song with artist user wants to add
-        //      * returns addsong
-        //      **/
-        //     var examples = {};
-        //     examples['application/json'] = {
-        //         "song": "aeiou",
-        //         "userid": 123456789
-        //     };
-        //     if (Object.keys(examples).length > 0) {
-        //         res.setHeader('Content-Type', 'application/json');
-        //         res.end(JSON.stringify(examples[Object.keys(examples)[0]] || {}, null, 2));
-        //     } else {
-        //         res.end();
-        //     }
-        // }
-        //
-        // module.exports.deleteSong = function(args, res, next) {
-        //     /**
-        //      * Delete a song to authorized user's personal playlist.
-        //      *
-        //      * id Long Return an individual associated with that id
-        //      * sid Long Id associated with song selected
-        //      * returns song
-        //      **/
-        //     var examples = {};
-        //     examples['application/json'] = {
-        //         "artistname": "aeiou",
-        //         "songid": 123456789,
-        //         "userid": 123456789,
-        //         "songname": "aeiou"
-        //     };
-        //     if (Object.keys(examples).length > 0) {
-        //         res.setHeader('Content-Type', 'application/json');
-        //         res.end(JSON.stringify(examples[Object.keys(examples)[0]] || {}, null, 2));
-        //     } else {
-        //         res.end();
-        //     }
-        // }
+// function deleteSong(){}
 
+//example of Delete User Try this for my user.
 
-//
-//         //**********************************************************end of newUser in mifit
-//         module.exports.getUserPlaylistByUserId = function(args, res, next) {
-//             /**
-//              * Returns the list of songs that belong to a user with the specified id.
-//              *
-//              * id Long Fetch playlist with songs associated with signed in user id.
-//              * returns playlist
-//              **/
-//
-//
-//
-//             var examples = {};
-//             examples['application/json'] = {
-//                 "songs": [{
-//                     "artistname": "aeiou",
-//                     "songid": 123456789,
-//                     "userid": 123456789,
-//                     "songname": "aeiou"
-//                 }]
-//             };
-//             if (Object.keys(examples).length > 0) {
-//                 res.setHeader('Content-Type', 'application/json');
-//                 res.end(JSON.stringify(examples[Object.keys(examples)[0]] || {}, null, 2));
-//             } else {
-//                 res.end();
-//             }
-//         }
-//
-//         module.exports.getGroupsPerUser = function(args, res, next) {
-//             /**
-//              * Gets all groups that belong to a certain user.
-//              *
-//              * id Long Returns a user associated with that id
-//              * returns List
-//              **/
-//             var examples = {};
-//             examples['application/json'] = [{
-//                 "group_name": "aeiou"
-//             }];
-//             if (Object.keys(examples).length > 0) {
-//                 res.setHeader('Content-Type', 'application/json');
-//                 res.end(JSON.stringify(examples[Object.keys(examples)[0]] || {}, null, 2));
-//             } else {
-//                 res.end();
-//             }
-//         }
-//         //BREAK WEEK : how to better organize relationship database to include user from
-//         // multiple groups. eg: instructor in multiple groups.
-//
-//         module.exports.addSong = function(args, res, next) {
-//             /**
-//              * Add a song to authorized user's personal playlist.
-//              *
-//              * id Long Return an individual associated with that id
-//              * song Addsong Name of song with artist user wants to add
-//              * returns addsong
-//              **/
-//             var examples = {};
-//             examples['application/json'] = {
-//                 "song": "aeiou",
-//                 "userid": 123456789
-//             };
-//             if (Object.keys(examples).length > 0) {
-//                 res.setHeader('Content-Type', 'application/json');
-//                 res.end(JSON.stringify(examples[Object.keys(examples)[0]] || {}, null, 2));
-//             } else {
-//                 res.end();
-//             }
-//         }
-//
-//         module.exports.deleteSong = function(args, res, next) {
-//             /**
-//              * Delete a song to authorized user's personal playlist.
-//              *
-//              * id Long Return an individual associated with that id
-//              * sid Long Id associated with song selected
-//              * returns song
-//              **/
-//             var examples = {};
-//             examples['application/json'] = {
-//                 "artistname": "aeiou",
-//                 "songid": 123456789,
-//                 "userid": 123456789,
-//                 "songname": "aeiou"
-//             };
-//             if (Object.keys(examples).length > 0) {
-//                 res.setHeader('Content-Type', 'application/json');
-//                 res.end(JSON.stringify(examples[Object.keys(examples)[0]] || {}, null, 2));
-//             } else {
-//                 res.end();
-//             }
-//         }
-//
-//         module.exports.userSignIn = function(args, res, next) {
-//             /**
-//              * User authentication via sign-in.
-//              *
-//              * user_name User_name Username of user trying to log-in
-//              * returns user_name
-//              **/
-//             var examples = {};
-//             examples['application/json'] = {
-//                 "username": "aeiou"
-//             };
-//             if (Object.keys(examples).length > 0) {
-//                 res.setHeader('Content-Type', 'application/json');
-//                 res.end(JSON.stringify(examples[Object.keys(examples)[0]] || {}, null, 2));
-//             } else {
-//                 res.end();
-//             }
-//         }
-//
-//
-//         exports.deleteSingleUserInGroup = function(args, res, next) {
-//             /**
-//              * Delete an individual user that belongs to a certain group.
-//              *
-//              * gid Long Return a group associated with that id
-//              * id Long Return an individual associated with that id
-//              * returns user
-//              **/
-//             var examples = {};
-//             examples['application/json'] = {
-//                 "password": "aeiou",
-//                 "updated_at": "aeiou",
-//                 "user_id": 123,
-//                 "user_name": "aeiou",
-//                 "created_at": "aeiou"
-//             };
-//             if (Object.keys(examples).length > 0) {
-//                 res.setHeader('Content-Type', 'application/json');
-//                 res.end(JSON.stringify(examples[Object.keys(examples)[0]] || {}, null, 2));
-//             } else {
-//                 res.end();
-//             }
-//         }
-
-
+// function deleteUser(req, res) {
+//   let knex = require('../../knex.js');
+//   let paramId = req.swagger.params.user_id.value;
+//   if (req.body.userId !== paramId){
+//     res.status(401).json('Unauthorized: The ID you are attempting to delete belongs to another user');
+//   } else {
+//     knex('users')
+//     .del()
+//     .where('id', paramId)
+//     .then((user) => {
+//       res.send(user[0]);
+//     })
+//     .catch((err) => {
+//       console.error(err);
+//     })
+//     .finally(() => {
+//       // knex.destroy();
+//     });
+//   };
+// }
 
         module.exports ={
             userById: userById,
             getUserPlaylistByUserId: getUserPlaylistByUserId,
+            getGroupsPerUser: getGroupsPerUser,
+            addSong: addSong
             // getGroupCompiledPlaylist: getGroupCompiledPlaylist
         }
