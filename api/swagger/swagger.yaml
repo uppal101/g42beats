@@ -153,36 +153,37 @@ paths:
   #         schema:
   #           $ref: "#/definitions/errorModel"
 
-  # /groups/{gid}/group_members/users/{id}:
-  
-  #   x-swagger-router-controller: groups
-  #   get:
-  #     description: Gets an individual user that belongs to a certain group.
-  #     operationId: getSingleUserInGroup
-  #     produces:
-  #     - application/json
-  #     parameters:
-  #     - name: gid
-  #       in: path
-  #       description: Return a group associated with that id
-  #       required: true
-  #       type: integer
-  #       format: int64
-  #     - name: id
-  #       in: path
-  #       description: Return an individual associated with that id
-  #       required: true
-  #       type: integer
-  #       format: int64
-  #     responses:
-  #       "200":
-  #         description: Got individual user
-  #         schema:
-  #           $ref: "#/definitions/user"
-  #       default:
-  #         description: unexpected error
-  #         schema:
-  #           $ref: "#/definitions/errorModel"
+
+  /groups/{gid}/group_members/users/{id}:
+
+    x-swagger-router-controller: groups
+    get:
+      description: Gets an individual user that belongs to a certain group.
+      operationId: getSingleUserInGroup
+      produces:
+      - application/json
+      parameters:
+      - name: gid
+        in: path
+        description: Return a group associated with that id
+        required: true
+        type: integer
+        format: int64
+      - name: id
+        in: path
+        description: Return an individual associated with that id
+        required: true
+        type: integer
+        format: int64
+      responses:
+        "200":
+          description: Got individual user
+          schema:
+            $ref: "#/definitions/user"
+        default:
+          description: unexpected error
+          schema:
+            $ref: "#/definitions/errorModel"
 
   #   delete:
   #     description: Delete an individual user that belongs to a certain group.
@@ -388,18 +389,14 @@ definitions:
   song:
     type: object
     required:
-    - songid
     - songname
     - artistname
     properties:
-      songid:
-        type: integer
-        format: int64
       songname:
         type: string
       artistname:
         type: string
-        
+
   deletesong:
     type: object
     required:
@@ -441,7 +438,7 @@ definitions:
         type: "string"
       group_name:
         type: "string"
-        
+
   adduserresponse:
     type: object
     required:
@@ -456,7 +453,7 @@ definitions:
       userid:
         type: integer
         format: int64
-   
+
   loginresponse:
     type: object
     required:
@@ -471,7 +468,7 @@ definitions:
         format: int64
       token:
         type: "string"
-  
+
   userlogin:
     type: object
     required:
@@ -482,7 +479,7 @@ definitions:
         type: string
       password:
         type: string
-  
+
   username:
     type: object
     required:
@@ -494,7 +491,7 @@ definitions:
       userid:
         type: integer
         format: int64
-      
+
 
   errorModel:
     type: object
