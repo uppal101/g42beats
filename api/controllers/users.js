@@ -11,8 +11,7 @@ const {
 } = require('humps');
 //Ivonne
  function userById(req, res) {
-   let paramId = req.swagger.params.id.value
-  //  console.log(id);
+   let paramId = req.swagger.params.id.value;
    knex('users')
    .where('id', paramId)
    .then(user=> {
@@ -45,7 +44,6 @@ function getUserPlaylistByUserId(req, res){
     .then((usersongs) => {
       console.log(usersongs);
       if(!usersongs){
-      //   // console.log(userssongs);
         res.status(404).json('Not Found');
       } else {
         usersongs.map(function(object){
@@ -109,18 +107,14 @@ function createUser(req, res, next) {
         });
 }
 
-
 function getGroupsPerUser(req, res){
   let userId = req.swagger.params.id.value;
   knex('groups')
   .join('group_members','groups.id', '=', 'group_members.group_id')
-  // .join('users', 'playlist.song_id', '=', 'songs.id')
   .select()
   .where('user_id', userId)
     .then((userGroups) => {
-      console.log(userGroups);
       if(!userGroups){
-        // console.log(userssongs);
         res.status(404).json('Not Found');
       } else {
         delete userGroups[0].created_at;
@@ -135,40 +129,63 @@ function getGroupsPerUser(req, res){
       console.error(err);
     })
 }
+//Partly working. need to also insert the songId into the dt and playlist.
+function addSong(req, res) {
+  let user = req.body.user_name;
+  let songName = req.body.song;
+  let artistName = req.body.artist;
+  knex('songs')
+  .insert({
+    song_name: songName,
+    artist: artistName
+  }, '*')
+  //srill working through this part.
+  // .select('id')
+  // .where( {
+  //   song_name: songName,
+  //   artit: artistName
+  // })
+  // .insert({
+  //
+  // })
+  .then((songToAdd) => {
+    console.log(songToAdd);
+    res.send(songToAdd[0]);
+  })
+  .catch((err) => {
+    console.error(err);
+  })
+}
 
+// function deleteSong(){}
 
+//example of Delete User Try this for my user.
 
-        // //BREAK WEEK : how to better organize relationship database to include user from
-        // // multiple groups. eg: instructor in multiple groups.
-        //
-        // module.exports.addSong = function(args, res, next) {
-        //     /**
-        //      * Add a song to authorized user's personal playlist.
-        //      *
-        //      * id Long Return an individual associated with that id
-        //      * song Addsong Name of song with artist user wants to add
-        //      * returns addsong
-        //      **/
-        //     var examples = {};
-        //     examples['application/json'] = {
-        //         "song": "aeiou",
-        //         "userid": 123456789
-        //     };
-        //     if (Object.keys(examples).length > 0) {
-        //         res.setHeader('Content-Type', 'application/json');
-        //         res.end(JSON.stringify(examples[Object.keys(examples)[0]] || {}, null, 2));
-        //     } else {
-        //         res.end();
-        //     }
-        // }
-        //
-
-
-
+// function deleteUser(req, res) {
+//   let knex = require('../../knex.js');
+//   let paramId = req.swagger.params.user_id.value;
+//   if (req.body.userId !== paramId){
+//     res.status(401).json('Unauthorized: The ID you are attempting to delete belongs to another user');
+//   } else {
+//     knex('users')
+//     .del()
+//     .where('id', paramId)
+//     .then((user) => {
+//       res.send(user[0]);
+//     })
+//     .catch((err) => {
+//       console.error(err);
+//     })
+//     .finally(() => {
+//       // knex.destroy();
+//     });
+//   };
+// }
 
         module.exports ={
             userById: userById,
             getUserPlaylistByUserId: getUserPlaylistByUserId,
-            getGroupsPerUser: getGroupsPerUser
+            getGroupsPerUser: getGroupsPerUser,
+            addSong: addSong
             // getGroupCompiledPlaylist: getGroupCompiledPlaylist
         }

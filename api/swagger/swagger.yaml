@@ -268,7 +268,7 @@ paths:
 
   /users/{id}/playlist/songs:
     x-swagger-router-controller: users
-    put:
+    post:
       description: Add a song to authorized user's personal playlist.
       operationId: addSong
       produces:
@@ -403,30 +403,30 @@ definitions:
   deletesong:
     type: object
     required:
-    - userid
-    - songid
+    - user_name
     - song
+    - artist
     properties:
-      userid:
-        type: integer
-        format: int64
-      songid:
-        type: integer
-        format: int64
+      user_name:
+        type: string
       song:
         type: string
+      artist:
+        type: string  
 
   addsong:
     type: object
     required:
-    - userid
+    - user_name
     - song
+    - artist
     properties:
-      userid:
-        type: integer
-        format: int64
+      user_name:
+        type: string
       song:
         type: string
+      artist:
+        type: string  
 
   adduser:
     type: object
