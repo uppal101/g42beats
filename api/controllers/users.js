@@ -184,7 +184,9 @@ function addSong(req, res) {
 
 
 
-// function deleteSong(){}
+function deleteSong(){
+
+}
 
 
 

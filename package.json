@@ -37,7 +37,7 @@
   },
   "scripts": {
     "start": "node app.js",
-    "test": "mocha test/api/controllers/users.test.js"
+    "test": "mocha test/api/controllers/*.test.js"
   },
   "directories": {
     "test": "test"
