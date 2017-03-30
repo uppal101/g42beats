@@ -82,78 +82,72 @@ describe('GET users/{id}', () => {
     });
 });
 
+describe('GET /users/{id}/playlist', () => {
+    it("should respond with user's personal playlist that is associated with the specified id", (done) => {
+      supertest(app)
+        .get('/users/1/playlist')
+        .set('Accept', 'application/json')
+        .expect(200, [{
+          song_name: 'Ode to Viceroy',
+          artist: 'Mac DeMarco'
+        },
+        {
+          song_name: 'Apocalypse Dreams',
+          artist: 'Tame Impala'
+        },
+        {
+          song_name: 'Which Way to Go',
+          artist: 'Eddy Current Suppression Ring',
+        },
+        {
+          song_name: 'Snowblind',
+          artist: 'Black Sabbath'
+        },
+        {
+          song_name: 'Mt Abraxas',
+          artist: 'Uncle Acid And The Deadbeats',
+        }
+      ], done);
+    });
 
+    it('should respond with 404 if user enters incorrect parameter', (done) => {
+      supertest(app)
+      .get('/users/hkhjk')
+      .set('Accept', 'Application/json')
+      .expect(404, JSON.stringify({code:404, message: "please enter valid information"}, done));
+    });
+});
 
+describe('GET /users/{id}/groups_members', () => {
+    it('should get all groups that belong to a certain user', (done) => {
+      supertest(app)
+        .get('/users/5/group_members')
+        .set('Accept', 'application/json')
+        .expect(200, [{
+          group_name: 'g42'
+        }], done);
+    });
+    it('should respond with 404 if user enters incorrect parameter', (done) => {
+      supertest(app)
+      .get('/users/hkhjk')
+      .set('Accept', 'Application/json')
+      .expect(404, JSON.stringify({code:404, message: "please enter valid information"}, done));
+    });
+});
 
-
-
-
-
-
-
-
-
-
-
-
-
-      /////Randal's code regarding post autentication.
-//   function postToken(req, res) {
-//     knex('clients')
-//         .where('email', req.swagger.params.credentials.value.email)
-//         .first()
-//         .then((client) => {
-//             return bcrypt.compare(
-//                 req.swagger.params.credentials.value.password,
-//                 client.hashed_password
-//             );
-//         })
-//         .catch((err) => {
-//             res.set('Content-Type', 'match/plain')
-//             res.status(400).send('Bad email or password');
-//         })
-//         .then((result) => {
-//             return knex('clients')
-//                 .where('email', req.swagger.params.credentials.value.email)
-//                 .first();
-//         })
-//         .then((client) => {
-//             const claim = {
-//                 userId: client.id
-//             };
-//
-//             const token = jwt.sign(claim, process.env.JWT_KEY, {
-//                 expiresIn: '7 days'
-//             });
-//
-//             // res.cookie('token', token, {
-//             //     httpOnly: true,
-//             //     expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
-//             //     secure: process.env.NODE_ENV === 'production'
-//             // });
-//             client.token = token;
-//
-//             delete client.first_name;
-//             delete client.last_name;
-//             delete client.hashed_password;
-//             delete client.created_at;
-//             delete client.updated_at;
-//
-//             res.set('Token', token);
-//             res.set('Content-Type', 'application/json');
-//             res.status(200).json(client);
-//         })
-//         .catch((err) => {
-//             res.set('Content-Type', 'text/plain');
-//             res.status(400).send('Bad email or password');
-//         })
-//         .catch(bcrypt.MISMATCH_ERROR, () => {
-//             res.set('Content-Type', 'text/plain');
-//             res.status(400).send('Bad email or password');
-//         });
-// }
-/////////////////////////////////////////////////////
-
-
-    ///this one closes all the usres route tests.
-  // });
+describe('POST /users/{id}/playlist/songs', () => {
+    it('allows authorized user to add song to their personal playlist', (done) => {
+      supertest(app)
+        .post('/users/4/playlist/songs')
+        .set('Accept', 'application/json')
+        .send({
+          user_name: 'SanjeetUppal',
+          song: '21 Questions',
+          artist: '50 Cent'
+        })
+        .expect(200, [{
+          "id": 1,
+          "user_name": 'AlexKrawiec'
+        }], done);
+    });
+});
