@@ -177,5 +177,6 @@ describe('POST /users/{id}/playlist/songs', () => {
               });
             done();
           })
-    });
+        });
+  });
 });
