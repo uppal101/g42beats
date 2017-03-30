@@ -298,7 +298,6 @@ paths:
             $ref: "#/definitions/errorModel"
 
   /users/{id}/playlist/songs/{sid}:
-    x-swagger-router-controller: users
     delete:
       description: Delete a song to authorized user's personal playlist.
       operationId: deleteSong
@@ -317,12 +316,6 @@ paths:
         required: true
         type: integer
         format: int64
-      - name: song
-        in: body
-        description: Name of song with artist user wants to add
-        required: true
-        schema:
-            $ref: "#/definitions/deletesong"
       responses:
         "204":
           description: Got individual user
@@ -400,16 +393,13 @@ definitions:
   deletesong:
     type: object
     required:
-    - user_name
     - song
     - artist
     properties:
-      user_name:
-        type: string
       song:
         type: string
       artist:
-        type: string  
+        type: string
 
   addsong:
     type: object
@@ -423,7 +413,7 @@ definitions:
       song:
         type: string
       artist:
-        type: string  
+        type: string
 
   adduser:
     type: object
