@@ -153,37 +153,37 @@ paths:
   #         schema:
   #           $ref: "#/definitions/errorModel"
 
+  # /groups/{gid}/group_members/users/{id}:
+  #
+  #   x-swagger-router-controller: groups
+  #   get:
+  #     description: Gets an individual user that belongs to a certain group.
+  #     operationId: getSingleUserInGroup
+  #     produces:
+  #     - application/json
+  #     parameters:
+  #     - name: gid
+  #       in: path
+  #       description: Return a group associated with that id
+  #       required: true
+  #       type: integer
+  #       format: int64
+  #     - name: id
+  #       in: path
+  #       description: Return an individual associated with that id
+  #       required: true
+  #       type: integer
+  #       format: int64
+  #     responses:
+  #       "200":
+  #         description: Got individual user
+  #         schema:
+  #           $ref: "#/definitions/user"
+  #       default:
+  #         description: unexpected error
+  #         schema:
+  #           $ref: "#/definitions/errorModel"
 
-  /groups/{gid}/group_members/users/{id}:
-
-    x-swagger-router-controller: groups
-    get:
-      description: Gets an individual user that belongs to a certain group.
-      operationId: getSingleUserInGroup
-      produces:
-      - application/json
-      parameters:
-      - name: gid
-        in: path
-        description: Return a group associated with that id
-        required: true
-        type: integer
-        format: int64
-      - name: id
-        in: path
-        description: Return an individual associated with that id
-        required: true
-        type: integer
-        format: int64
-      responses:
-        "200":
-          description: Got individual user
-          schema:
-            $ref: "#/definitions/user"
-        default:
-          description: unexpected error
-          schema:
-            $ref: "#/definitions/errorModel"
 
   #   delete:
   #     description: Delete an individual user that belongs to a certain group.

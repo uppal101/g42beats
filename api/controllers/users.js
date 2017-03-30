@@ -16,13 +16,15 @@ const {
    .where('id', paramId)
    .then(user=> {
      if(!user) {
-      //  console.log("this is the user i see first", user);
+       console.log("this is the user i see first", user);
        res.status(404).json('Not Found');
      } else {
        delete user[0].hashed_password;
        delete user[0].created_at;
        delete user[0].updated_at;
-      //  console.log(user);
+       delete user[0].id;
+       delete user[0].user_name;
+       console.log(user);
      }
      res.status(200).json(user);
    })
@@ -40,7 +42,7 @@ function getUserPlaylistByUserId(req, res){
   .select()
   .where('user_id', userId)
     .then((usersongs) => {
-      // console.log(usersongs);
+      console.log(usersongs);
       if(!usersongs){
         res.status(404).json('Not Found');
       } else {
@@ -51,6 +53,8 @@ function getUserPlaylistByUserId(req, res){
           delete object.created_at;
           delete object.hashed_password;
           delete object.user_id;
+          delete object.id;
+          delete object.user_name;
         });
       }
       res.status(200).json(usersongs);
@@ -64,9 +68,6 @@ function getUserPlaylistByUserId(req, res){
 //   let gid = req.swagger.params.id.value;
 //   knex('oups')
 // }
-      // }
-
-
 
 function getGroupsPerUser(req, res){
   let userId = req.swagger.params.id.value;
@@ -92,33 +93,63 @@ function getGroupsPerUser(req, res){
 }
 //Partly working. need to also insert the songId into the dt and playlist.
 function addSong(req, res) {
-  let user = req.body.user_name;
+  let userName = req.body.user_name;
   let songName = req.body.song;
   let artistName = req.body.artist;
+  let userId = req.swagger.params.id.value;
+
   knex('songs')
-  .insert({
-    song_name: songName,
-    artist: artistName
-  }, '*')
-  //srill working through this part.
-  // .select('id')
-  // .where( {
-  //   song_name: songName,
-  //   artit: artistName
-  // })
-  // .insert({
-  //
-  // })
-  .then((songToAdd) => {
-    // console.log(songToAdd);
-    res.send(songToAdd[0]);
+  .select()
+  .where('song_name', songName)
+  .where('artist', artistName)
+  .first()
+  .then((song) => {
+    if(song){
+      let data =    {
+         song_id: song.id,
+         user_id: userId
+        }
+      knex('playlist')
+     .insert(data,'*')
+      .then(()=> {
+        res.send(200, data);
+      })
+    } else {
+      knex('songs')
+      .insert({
+        song_name: songName,
+        artist: artistName
+      }, '*')
+      .then((songToAdd) => {
+        knex('playlist')
+        .insert({
+          user_id: userId,
+          song_id: songToAdd[0].id
+        }, '*')
+        return songToAdd;
+      })
+        .then((songToAdd)=> {
+            res.send(200, songToAdd);
+        })
+    }
+  })
+  .then((addedSong) => {
+    console.log(addedSong);
+    // res.send(addedSong);
   })
   .catch((err) => {
     console.error(err);
   })
 }
 
-// function deleteSong(){}
+
+
+function deleteSong(){
+
+}
+
+
+
 
 //example of Delete User Try this for my user.
 
