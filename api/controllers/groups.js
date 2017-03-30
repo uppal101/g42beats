@@ -24,7 +24,7 @@ function getGroupCompiledPlaylist(req, res){
     .select()
     .where('groups.id', groupId)
     .then(providedGp => {
-        console.log(providedGp);
+        // console.log(providedGp);
       if(!providedGp){
         res.status(404).json('Not Found');
       } else {
@@ -61,7 +61,7 @@ function getUsersInGroup(req, res){
   .where('group_name', groupId)
   .then(usersInGroup => {
     // console.log(usersInGroup.id)
-    console.log("this is where the groupsId should be");;
+    // console.log("this is where the groupsId should be");;
     res.status(200).json(usersInGroup);
   })
   .catch(err => {

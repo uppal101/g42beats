@@ -9,15 +9,15 @@ const bcrypt = require('bcrypt');
 // `before` runs once before all tests in a describe
 before((done) => {
   knex.migrate.rollback()
-  .then(function(){
-    return knex.migrate.latest()
-  })
-  .then(() => {
-    done();
-  })
-  .catch((err) => {
-    done(err);
-  });
+    .then(function() {
+      return knex.migrate.latest()
+    })
+    .then(() => {
+      done();
+    })
+    .catch((err) => {
+      done(err);
+    });
 });
 
 // `beforeEach` is run before each test in a describe
@@ -58,126 +58,82 @@ describe('POST /users', () => {
         password: password,
         group_name: 'g42'
       })
-      .expect( (user) => {
-        delete user.body.created_at;
-        delete user.body.updated_at;
-      })
       .expect(200, {
-        id: 15,
-        user_name: 'Carolina',
-
+        newUser: {
+          id: 15,
+          user_name: 'Carolina',
+        },
+        newGroupMember: {
+          id: 15,
+          group_id: 1,
+          user_id: 15
+        }
       })
       .expect('Content-Type', /json/)
       .end((httpErr, _res) => {
 
-      if (httpErr) {
-        return done(httpErr);
-      }
+        if (httpErr) {
+          return done(httpErr);
+        }
+        knex('users')
+          .where('id', 15)
+          .first()
+          .then((user) => {
 
-      knex('users')
-        .where('id', 15)
-        .first()
-        .then((user) => {
+            const hashed_password = user.hashed_password;
 
-          const hashed_password = user.hashed_password;
+            delete user.hashed_password;
+            delete user.created_at;
+            delete user.updated_at;
 
-          delete user.hashed_password;
-          delete user.created_at;
-          delete user.updated_at;
-
-          assert.deepEqual(user,
-            {
+            assert.deepEqual(user, {
               id: 15,
               user_name: 'Carolina'
             });
 
-          // Synchronous password comparison
-          const isMatch = bcrypt.compareSync(password, hashed_password);
+            // Synchronous password comparison
+            const isMatch = bcrypt.compareSync(password, hashed_password);
 
-          assert.isTrue(isMatch, "passwords don't match");
-          done();
-        })
-        .catch((dbErr) => {
-          done(dbErr);
-        });
+            assert.isTrue(isMatch, "passwords don't match");
+            done();
+          })
+          .catch((dbErr) => {
+            done(dbErr);
+          });
       });
   });
 });
 
 
-  // userSignIn
-
-  // do I need to compare passwords first?
 let token = '';
 describe('POST users/login', () => {
   it('should create and send a token', (done) => {
     supertest(app)
-    .post('/users/login')
-    .set('Accept', 'application/json')
-    .set('Content-Type', 'application/json')
-    .send({
-      user_name: 'SanjeetUppal',
-      password: g42beats
-    })
-    .end((err, res) => {
-      expect(res.body.token)
-      token = res.body.token;
-    })
+      .post('/users/login')
+      .set('Accept', 'application/json')
+      .set('Content-Type', 'application/json')
+      .send({
+        user_name: 'SanjeetUppal',
+        password: 'g42beats'
+      })
+      .end((err, res) => {
+        expect(res.body.token)
+        token = res.body.token;
+      })
     done();
   })
-  it('should send an object with users information', (done) => {
-
-    supertest(app)
-    .post('/users/login')
-    .set('Accept', 'application/json')
-    .set('Content-Type', 'application/json')
-    .send({
-      user_name: 'SanjeetUppal',
-      password: g42beats
-    })
-    .expect( (user) => {
-      delete user.body.created_at;
-      delete user.body.updated_at;
-    })
-    .expect(200, {
-      id: 4,
-      user_name: 'SanjeetUppal',
-      token: token
-    })
-    .expect('Content-Type', /json/)
-    .end((httpErr, _res) => {
-
-    if (httpErr) {
-      return done(httpErr);
-    }
-
-    knex('users')
-      .where('id', 4)
-      .first()
-      .then((user) => {
-
-      const hashed_password = user.hashed_password;
-
-      delete user.hashed_password;
-      delete user.created_at;
-      delete user.updated_at;
-
-      assert.deepEqual(user,
-        {
-          id: 4,
-          user_name: 'SanjeetUppal'
-          //token: token
-        });
-
-      // Synchronous password comparison
-      const isMatch = bcrypt.compareSync(password, hashed_password);
-
-      assert.isTrue(isMatch, "passwords don't match");
-      done();
-    })
-    .catch((dbErr) => {
-      done(dbErr);
-    });
-    });
-  });
 });
+
+// test('DELETE /favorites', (done) => {
+//     agent
+//       .delete('/favorites')
+//       .set('Accept', 'application/json')
+//       .set('Content-Type', 'application/json')
+//       .send({ bookId: 1 })
+//       .expect('Content-Type', /json/)
+//       .expect((res) => {
+//         delete res.body.createdAt;
+//         delete res.body.updatedAt;
+//       })
+//       .expect(200, { bookId: 1, userId: 1 }, done);
+//   });
