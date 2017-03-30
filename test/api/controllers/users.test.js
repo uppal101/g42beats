@@ -54,7 +54,7 @@ const bcrypt = require('bcrypt');
 
     //get a userByID
 describe('GET users/{id}', () => {
-    it('should respond with user information with the specified id', (done) => {
+    it('should respond with song information with the specified id', (done) => {
       supertest(app)
         .get('/users/1')
         .set('Accept', 'application/json')
@@ -64,14 +64,14 @@ describe('GET users/{id}', () => {
         }], done);
     });
 
-    it('should respond with 404 if user enters incorrect parameter', (done) => {
+    it('should respond with 404 if song enters incorrect parameter', (done) => {
       supertest(app)
       .get('/users/hkhjk')
       .set('Accept', 'Application/json')
       .expect(404, JSON.stringify({code:404, message: "please enter valid information"}, done));
     });
 
-    it('should respond with user information with the specified id', (done) => {
+    it('should respond with song information with the specified id', (done) => {
       supertest(app)
         .get('/users/4')
         .set('Accept', 'application/json')
@@ -83,7 +83,7 @@ describe('GET users/{id}', () => {
 });
 
 describe('GET /users/{id}/playlist', () => {
-    it("should respond with user's personal playlist that is associated with the specified id", (done) => {
+    it("should respond with song's personal playlist that is associated with the specified id", (done) => {
       supertest(app)
         .get('/users/1/playlist')
         .set('Accept', 'application/json')
@@ -110,7 +110,7 @@ describe('GET /users/{id}/playlist', () => {
       ], done);
     });
 
-    it('should respond with 404 if user enters incorrect parameter', (done) => {
+    it('should respond with 404 if song enters incorrect parameter', (done) => {
       supertest(app)
       .get('/users/hkhjk')
       .set('Accept', 'Application/json')
@@ -119,7 +119,7 @@ describe('GET /users/{id}/playlist', () => {
 });
 
 describe('GET /users/{id}/groups_members', () => {
-    it('should get all groups that belong to a certain user', (done) => {
+    it('should get all groups that belong to a certain song', (done) => {
       supertest(app)
         .get('/users/5/group_members')
         .set('Accept', 'application/json')
@@ -127,27 +127,55 @@ describe('GET /users/{id}/groups_members', () => {
           group_name: 'g42'
         }], done);
     });
-    it('should respond with 404 if user enters incorrect parameter', (done) => {
+    it('should respond with 404 if song enters incorrect parameter', (done) => {
       supertest(app)
       .get('/users/hkhjk')
       .set('Accept', 'Application/json')
       .expect(404, JSON.stringify({code:404, message: "please enter valid information"}, done));
     });
 });
-
+// create association in playlist
 describe('POST /users/{id}/playlist/songs', () => {
-    it('allows authorized user to add song to their personal playlist', (done) => {
+    it('allows authorized song to add song to their personal playlist', (done) => {
       supertest(app)
         .post('/users/4/playlist/songs')
         .set('Accept', 'application/json')
         .send({
           user_name: 'SanjeetUppal',
-          song: '21 Questions',
+          song_name: '21 Questions',
           artist: '50 Cent'
         })
-        .expect(200, [{
-          "id": 1,
-          "user_name": 'AlexKrawiec'
-        }], done);
+        .expect((song) => {
+          delete song.body.created_at;
+          delete song.body.updated_at;
+        })
+        .expect(200,{
+          id: 69,
+          song_name: '21 Questions',
+          artist: '50 Cent'
+        })
+        .expect('Content-Type', /json/)
+        .end((httpErr, _res) => {
+
+        if (httpErr) {
+          return done(httpErr);
+        }
+
+        knex('songs')
+          .where('id', 69)
+          .first()
+          .then((song) => {
+
+            delete song.created_at;
+            delete song.updated_at;
+
+            assert.deepEqual(song,
+              {
+                id: 69,
+                song_name: '21 Questions',
+                artist: '50 Cent'
+              });
+            done();
+          })
     });
 });
