@@ -70,7 +70,7 @@ function createUser(req, res, next) {
         })
         .then((insertingGroupMember) => {
           console.log(checkingGroup);
-          knex('group_members').insert({group_id: insertingGroupMember, user_id: userId})
+          knex('group_members').insert({group_id: insertingGroupMember, user_id: userId}, "*")
         })
         .catch((err) => {
             next(err);
