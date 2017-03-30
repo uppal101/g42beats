@@ -68,46 +68,6 @@ function getUserPlaylistByUserId(req, res){
 //   let gid = req.swagger.params.id.value;
 //   knex('oups')
 // }
-      // }
-
-
-
-function createUser(req, res, next) {
-  let userId
-    bcrypt.hash(req.body.password, 12)
-        .then((hashed_password) => {
-          return knex('users')
-              .insert({
-                  user_name: req.body.user_name,
-                  hashed_password: hashed_password,
-                  // group_name: req.body.groupname
-              }, '*');
-        })
-        .then((user) => {
-            let newUser = user[0];
-            const claim = {
-                userId: newUser.id,
-                // permissions: newUser.permissions
-                //NOTE: this will be useful for the superuser.
-            }
-            const token = jwt.sign(claim, process.env.JWT_KEY);
-            newUser.token = token
-            delete newUser.hashed_password;
-            res.status(200).send(camelizeKeys(newUser));
-            return newUser;
-        })
-        .then((checkingGroup) => {
-           const id = knex('groups').where('group_name', req.body.groupname).select('id');
-           return id;
-        })
-        .then((insertingGroupMember) => {
-          console.log(checkingGroup);
-          knex('group_members').insert({group_id: insertingGroupMember, user_id: userId})
-        })
-        .catch((err) => {
-            next(err);
-        });
-}
 
 function getGroupsPerUser(req, res){
   let userId = req.swagger.params.id.value;
