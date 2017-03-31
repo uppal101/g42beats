@@ -153,6 +153,7 @@ paths:
   #         schema:
   #           $ref: "#/definitions/errorModel"
 
+
   # /groups/{gid}/group_members/users/{id}:
 
   #   x-swagger-router-controller: groups
@@ -408,12 +409,9 @@ definitions:
   addsong:
     type: object
     required:
-    - user_name
     - song
     - artist
     properties:
-      user_name:
-        type: string
       song:
         type: string
       artist:
@@ -478,9 +476,9 @@ definitions:
     type: object
     required:
     - userid
-    - username
+    - user_name
     properties:
-      username:
+      user_name:
         type: string
       userid:
         type: integer

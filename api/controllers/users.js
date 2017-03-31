@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt-as-promised');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const formatSongs = require('./apicallFormat').formatSongs;
+const rp = require('request-promise');
 const dotenv = require('dotenv').config();
 const {
     camelizeKeys,
@@ -33,7 +34,7 @@ const {
 
 // grab user playlist Ivonne
 function getUserPlaylistByUserId(req, res){
-
+  let formatedSongs;
   let userId = req.swagger.params.id.value;
   knex('users')
   .join('playlist','users.id', '=', 'playlist.user_id')
@@ -44,7 +45,7 @@ function getUserPlaylistByUserId(req, res){
       if(!usersongs){
         res.status(404).json('Not Found');
       } else {
-        usersongs.map(function(object){
+         formatedSongs = usersongs.map(function(object){
           delete object.hashed_password;
           delete object.song_id;
           delete object.updated_at;
@@ -53,9 +54,33 @@ function getUserPlaylistByUserId(req, res){
           delete object.user_id;
           delete object.id;
           delete object.user_name;
+          return object;
         });
       }
-      res.status(200).json(usersongs);
+      let urlReadySongs = formatSongs(formatedSongs)
+      return formatedSongs;
+    })
+
+    .then(function(songObjects){
+      let spotifyRequests = songObjects.map(function(songObj){
+        //return the request-promise module api call
+        return rp(`https://api.spotify.com/v1/search?q=${songObj.song_name}%20artist:${songObj.artist}&type=track`);
+        console.log('This is the array of responses', spotifyRequests);
+      })
+console.log('this are the requests', spotifyRequests);
+      return Promise.all(spotifyRequests)
+    })
+    .then(function(spotifyResponses) {
+       console.log('afterRESPONSES',spotifyResponses);
+       let urlToSend = spotifyResponses.map(function(song){
+        let parsedSong = JSON.parse(song);
+          return parsedSong.tracks.items[0];
+       });
+      //  console.log(urlToSend);
+      // send back the relevant stuff
+      //itereate throught the array of resolved promises that will need to
+      //make sure that the response we send back is an array of objects.
+      // res.status(200).json(preview_url);
     })
     .catch((err) => {
       console.error(err);
@@ -84,6 +109,7 @@ function getGroupsPerUser(req, res){
         delete userGroups[0].id;
       }
       res.status(200).json(userGroups);
+      // console.log('ENOBDOOW<');
     })
     .catch((err) => {
       console.error(err);
@@ -165,8 +191,6 @@ function deleteSong(req, res) {
       console.error(err);
     })
 }
-
-
 
 
 //example of Delete User Try this for my user.

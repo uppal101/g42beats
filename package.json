@@ -16,6 +16,7 @@
     "dotenv": "^4.0.0",
     "express": "^4.12.3",
     "humps": "^2.0.0",
+    "istanbul": "^0.4.5",
     "joi": "^10.2.2",
     "js-yaml": "^3.8.2",
     "jsonwebtoken": "^7.3.0",
@@ -24,6 +25,8 @@
     "node-fetch": "^1.6.3",
     "parser": "^0.1.4",
     "pg": "^6.1.4",
+    "request": "^2.81.0",
+    "request-promise": "^4.2.0",
     "swagger-express-mw": "^0.1.0",
     "swagger-tools": "^0.10.1"
   },
@@ -32,13 +35,14 @@
     "humps": "^2.0.0",
     "mocha": "^3.2.0",
     "nodemon": "^1.11.0",
+    "nyc": "^10.2.0",
     "should": "^7.1.0",
     "supertest": "^1.2.0",
     "yaml-lint": "0.0.4"
   },
   "scripts": {
     "start": "node app.js",
-    "test": "mocha test/api/controllers/*.test.js"
+    "test": "nyc --reporter=html --reporter=text mocha test/api/controllers/*.test.js"
   },
   "directories": {
     "test": "test"

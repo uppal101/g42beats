@@ -1,12 +1,13 @@
 
 
 function formatSongs(array) {
-  return  array.map(function(song) {
+  return array.map(function(song) {
+    console.log(song);
+    console.log(song.artist);
+      return ({song_name: encodeURI(song.song_name), artist: encodeURI(song.artist)});
+    });
 
-      return ({song_name: song.song_name.split(' ').join('%20'), artist: song.artist.split(' ').join('%20')});
-
-    })
 }
 module.exports = {
   formatSongs: formatSongs
-} 
+}
