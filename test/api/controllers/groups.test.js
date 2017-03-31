@@ -1,7 +1,8 @@
-const request = require('supertest');
+const assert = require('chai').assert;
+const supertest = require('supertest');
+const knex = require('../../../knex');
 const app = require('../../../app');
-const knex = require('../../../knex')
-const expect = require('chai').expect;
+const bcrypt = require('bcrypt');
 
 process.env.NODE_ENV = 'test';
 
