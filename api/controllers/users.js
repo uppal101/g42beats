@@ -143,7 +143,7 @@ function addSong(req, res) {
 }
 
 
-
+//NOT WORKing
 function deleteSong(req, res) {
   let userId = req.swagger.params.id.value;
   let songId =req.swagger.params.sid.value;
@@ -156,7 +156,6 @@ function deleteSong(req, res) {
     .first()
     .then((toBeDeleted) => {
       console.log(tobeDeleted);
-
       songToDelete = tobeDeleted;
     })
     .then(()=> {

@@ -315,13 +315,7 @@ paths:
         description: Id associated with song selected
         required: true
         type: integer
-        format: int64f
-      - name: song
-        in: body
-        description: Name of song with artist user wants to delete
-        required: true
-        schema:
-            $ref: "#/definitions/deletesong"
+        format: int64
       responses:
         "204":
           description: Got individual user
