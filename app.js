@@ -6,14 +6,13 @@ const auth = require('./validations/verifytoken.js');
 
 
 
-
 var config = {
   appRoot: __dirname // required config
 };
 
-// app.use('/api/controllers/groups', auth.verify);
-//
-// app.use('/api/controllers/users', auth.verify);
+app.use('/api/controllers/groups', auth.verifyToken);
+
+app.use('/api/controllers/users', auth.verifyToken);
 
 SwaggerExpress.create(config, function(err, swaggerExpress) {
   if (err) { throw err; }

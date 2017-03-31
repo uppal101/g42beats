@@ -383,16 +383,9 @@ definitions:
   song:
     type: object
     required:
-    - songid
-    - songname
-    - artistname
+    - preview_url
     properties:
-      songid:
-        type: integer
-        format: int64
-      songname:
-        type: string
-      artistname:
+      preview_url:
         type: string
 
   deletesong:
