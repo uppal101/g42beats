@@ -154,7 +154,7 @@ paths:
   #           $ref: "#/definitions/errorModel"
 
   # /groups/{gid}/group_members/users/{id}:
-  #
+
   #   x-swagger-router-controller: groups
   #   get:
   #     description: Gets an individual user that belongs to a certain group.
@@ -183,7 +183,6 @@ paths:
   #         description: unexpected error
   #         schema:
   #           $ref: "#/definitions/errorModel"
-
 
   #   delete:
   #     description: Delete an individual user that belongs to a certain group.
@@ -298,6 +297,7 @@ paths:
             $ref: "#/definitions/errorModel"
 
   /users/{id}/playlist/songs/{sid}:
+    x-swagger-router-controller: users
     delete:
       description: Delete a song to authorized user's personal playlist.
       operationId: deleteSong
@@ -315,7 +315,13 @@ paths:
         description: Id associated with song selected
         required: true
         type: integer
-        format: int64
+        format: int64f
+      - name: song
+        in: body
+        description: Name of song with artist user wants to delete
+        required: true
+        schema:
+            $ref: "#/definitions/deletesong"
       responses:
         "204":
           description: Got individual user
@@ -382,9 +388,13 @@ definitions:
   song:
     type: object
     required:
+    - songid
     - songname
     - artistname
     properties:
+      songid:
+        type: integer
+        format: int64
       songname:
         type: string
       artistname:

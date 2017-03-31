@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt-as-promised');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const dotenv = require('dotenv').config();
+const formatSongs = require('./apicallFormat').formatSongs;
 const {
     camelizeKeys,
     decamelizeKeys
@@ -40,8 +41,12 @@ function getGroupCompiledPlaylist(req, res){
           delete obj.group_id;
           delete obj.user_name;
         });
+        console.log(providedGp);
+        console.log(formatSongs(providedGp));
       }
         res.status(200).json(providedGp);
+
+
     })
     .catch(err => {
       console.error(err);
