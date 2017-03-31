@@ -10,9 +10,9 @@ var config = {
   appRoot: __dirname // required config
 };
 
-app.use('/api/controllers/groups', auth.verifyToken);
-
-app.use('/api/controllers/users', auth.verifyToken);
+// app.use('/groups', auth.verifyToken);
+//
+// app.use('/users', auth.verifyToken);
 
 SwaggerExpress.create(config, function(err, swaggerExpress) {
   if (err) { throw err; }
