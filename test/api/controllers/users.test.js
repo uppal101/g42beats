@@ -62,7 +62,6 @@ describe('GET users/{id}', () => {
           id: 1,
           user_name: 'AlexKrawiec'
         }], done);
-        done()
     });
 
     it('should respond with 404 if user enters incorrect parameter', (done) => {
@@ -70,7 +69,6 @@ describe('GET users/{id}', () => {
       .get('/users/hkhjk')
       .set('Accept', 'Application/json')
       .expect(404, JSON.stringify({code:404, message: "please enter valid information"}, done));
-      done()
     });
 
     it('should respond with user information with the specified id', (done) => {
@@ -81,7 +79,6 @@ describe('GET users/{id}', () => {
           id: 4,
           user_name: 'SanjeetUppal'
         }], done);
-        done()
     });
 });
 
