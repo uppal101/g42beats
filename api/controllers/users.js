@@ -4,11 +4,13 @@ const knex = require('../../knex');
 const bcrypt = require('bcrypt-as-promised');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
+const formatSongs = require('./apicallFormat').formatSongs;
 const dotenv = require('dotenv').config();
 const {
     camelizeKeys,
     decamelizeKeys
 } = require('humps');
+
 //Ivonne
  function userById(req, res) {
    let paramId = req.swagger.params.id.value;
@@ -31,6 +33,7 @@ const {
 
 // grab user playlist Ivonne
 function getUserPlaylistByUserId(req, res){
+
   let userId = req.swagger.params.id.value;
   knex('users')
   .join('playlist','users.id', '=', 'playlist.user_id')
@@ -101,7 +104,7 @@ function addSong(req, res) {
   .first()
   .then((song) => {
     if(song){
-      let data =    {
+      let data = {
          song_id: song.id,
          user_id: userId
         }
@@ -124,14 +127,16 @@ function addSong(req, res) {
         }, '*')
         return songToAdd;
       })
-        .then((songToAdd)=> {
+      .then((songToAdd)=> {
+          delete songToAdd.created_at;
+          delete songToAdd.updated_at;
             res.send(200, songToAdd);
         })
     }
   })
   .then((addedSong) => {
     console.log(addedSong);
-    // res.send(addedSong);
+
   })
   .catch((err) => {
     console.error(err);
@@ -140,8 +145,27 @@ function addSong(req, res) {
 
 
 
-function deleteSong(){
+function deleteSong(req, res) {
+  let userId = req.swagger.params.id.value;
+  let songId =req.swagger.params.sid.value;
+  let songToDelete;
 
+    knex('playlist')
+    .select()
+    .where('user_id', userId)
+    .where('song_id', songId)
+    .first()
+    .then((toBeDeleted) => {
+      console.log(tobeDeleted);
+
+      songToDelete = tobeDeleted;
+    })
+    .then(()=> {
+      res.send(songToDelete);
+    })
+    .catch((err)=> {
+      console.error(err);
+    })
 }
 
 
@@ -172,6 +196,7 @@ function deleteSong(){
             userById: userById,
             getUserPlaylistByUserId: getUserPlaylistByUserId,
             getGroupsPerUser: getGroupsPerUser,
-            addSong: addSong
+            addSong: addSong,
+            deleteSong: deleteSong
             // getGroupCompiledPlaylist: getGroupCompiledPlaylist
         }
