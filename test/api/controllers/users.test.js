@@ -121,7 +121,7 @@ describe('GET /users/{id}/playlist', () => {
 describe('GET /users/{id}/groups_members', () => {
     it('should get all groups that belong to a certain user', (done) => {
       supertest(app)
-        .get('/users/5/group_members')
+        .get('/users/5/groups_members')
         .set('Accept', 'application/json')
         .expect(200, [{
           group_name: 'g42'
@@ -129,32 +129,38 @@ describe('GET /users/{id}/groups_members', () => {
     });
     it('should respond with 404 if user enters incorrect parameter', (done) => {
       supertest(app)
-      .get('/users/hkhjk')
+      .get('/users/hkhjk/groups_members')
       .set('Accept', 'Application/json')
       .expect(404, JSON.stringify({code:404, message: "please enter valid information"}, done));
     });
 });
 
-// create association in playlist
+
 describe('POST /users/{id}/playlist/songs', () => {
     it('allows authorized user to add song to their personal playlist', (done) => {
       supertest(app)
         .post('/users/4/playlist/songs')
         .set('Accept', 'application/json')
         .send({
-          user_name: 'SanjeetUppal',
-          song_name: '21 Questions',
+          song: '21 Questions',
           artist: '50 Cent'
         })
         .expect((song) => {
           delete song.body.created_at;
           delete song.body.updated_at;
         })
-        .expect(200,{
-          id: 69,
-          song_name: '21 Questions',
-          artist: '50 Cent'
-        })
+        .expect(200, {
+          song: {
+            id: 69,
+            song: '21 Questions',
+            artist: '50 Cent'
+          },
+          playlist: {
+            id: 69,
+            song_id: 69,
+            user_id: 4
+          }
+        },done)
         .expect('Content-Type', /json/)
         .end((httpErr, _res) => {
 
@@ -173,7 +179,7 @@ describe('POST /users/{id}/playlist/songs', () => {
             assert.deepEqual(song,
               {
                 id: 69,
-                song_name: '21 Questions',
+                song: '21 Questions',
                 artist: '50 Cent'
               });
             done();
@@ -188,9 +194,15 @@ describe('DELETE /users/{id}/playlist/songs/{sid}', () => {
       supertest(app)
         .delete('/users/4/playlist/songs/14')
         .set('Accept', 'application/json')
-        .expect(200, [{
-          group_name: 'g42'
-        }], done);
+        .expect(204, {
+          song: {
+            song_name: ' Falling in Love With You',
+            artist: ' UB-40'
+          },
+          playlist: {
+            song_id: 14,
+            user_id: 4
+          }
+        }, done);
     });
-
 });

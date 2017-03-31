@@ -84,6 +84,7 @@ function getGroupsPerUser(req, res){
         delete userGroups[0].id;
       }
       res.status(200).json(userGroups);
+      // console.log('ENOBDOOW<');
     })
     .catch((err) => {
       console.error(err);
@@ -166,8 +167,6 @@ function deleteSong(req, res) {
       console.error(err);
     })
 }
-
-
 
 
 //example of Delete User Try this for my user.
