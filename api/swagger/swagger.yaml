@@ -316,7 +316,8 @@ paths:
         description: Id associated with song selected
         required: true
         type: integer
-        format: int64f
+        format: int64
+
       responses:
         "204":
           description: Got individual user

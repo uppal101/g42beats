@@ -25,6 +25,8 @@
     "node-fetch": "^1.6.3",
     "parser": "^0.1.4",
     "pg": "^6.1.4",
+    "request": "^2.81.0",
+    "request-promise": "^4.2.0",
     "swagger-express-mw": "^0.1.0",
     "swagger-tools": "^0.10.1"
   },
