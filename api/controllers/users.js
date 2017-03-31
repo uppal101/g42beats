@@ -16,15 +16,11 @@ const {
    .where('id', paramId)
    .then(user=> {
      if(!user) {
-       console.log("this is the user i see first", user);
        res.status(404).json('Not Found');
      } else {
        delete user[0].hashed_password;
        delete user[0].created_at;
        delete user[0].updated_at;
-       delete user[0].id;
-       delete user[0].user_name;
-       console.log(user);
      }
      res.status(200).json(user);
    })
@@ -42,7 +38,6 @@ function getUserPlaylistByUserId(req, res){
   .select()
   .where('user_id', userId)
     .then((usersongs) => {
-      console.log(usersongs);
       if(!usersongs){
         res.status(404).json('Not Found');
       } else {
@@ -86,6 +81,7 @@ function getGroupsPerUser(req, res){
         delete userGroups[0].id;
       }
       res.status(200).json(userGroups);
+      // console.log('ENOBDOOW<');
     })
     .catch((err) => {
       console.error(err);
@@ -147,8 +143,6 @@ function addSong(req, res) {
 function deleteSong(){
 
 }
-
-
 
 
 //example of Delete User Try this for my user.
