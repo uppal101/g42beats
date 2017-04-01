@@ -60,27 +60,25 @@ function getUserPlaylistByUserId(req, res){
       let urlReadySongs = formatSongs(formatedSongs)
       return formatedSongs;
     })
-
     .then(function(songObjects){
       let spotifyRequests = songObjects.map(function(songObj){
         //return the request-promise module api call
         return rp(`https://api.spotify.com/v1/search?q=${songObj.song_name}%20artist:${songObj.artist}&type=track`);
-        console.log('This is the array of responses', spotifyRequests);
       })
-console.log('this are the requests', spotifyRequests);
       return Promise.all(spotifyRequests)
     })
     .then(function(spotifyResponses) {
-       console.log('afterRESPONSES',spotifyResponses);
-       let urlToSend = spotifyResponses.map(function(song){
-        let parsedSong = JSON.parse(song);
-          return parsedSong.tracks.items[0];
-       });
-      //  console.log(urlToSend);
-      // send back the relevant stuff
-      //itereate throught the array of resolved promises that will need to
-      //make sure that the response we send back is an array of objects.
-      // res.status(200).json(preview_url);
+       let parsedResponse = spotifyResponses.map(function(album) {
+         if(album === undefined){
+           return "preview url not found";
+         }
+          return JSON.parse(album).tracks.items;
+          });
+        let urlsArr = parsedResponse.map(function(ele){
+          return ele[0].preview_url;
+        })
+        res.status(200);
+        res.send(urlsArr);
     })
     .catch((err) => {
       console.error(err);
@@ -115,7 +113,7 @@ function getGroupsPerUser(req, res){
       console.error(err);
     })
 }
-//Partly working. need to also insert the songId into the dt and playlist.
+
 function addSong(req, res) {
   let userName = req.body.user_name;
   let songName = req.body.song;
