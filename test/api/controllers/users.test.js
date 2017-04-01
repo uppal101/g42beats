@@ -147,40 +147,17 @@ describe('POST /users/{id}/playlist/songs', () => {
         .expect(200, {
           song: {
             id: 69,
-            song: '21 Questions',
+            song_name: '21 Questions',
             artist: '50 Cent'
           },
           playlist: {
             id: 69,
-            song_id: 69,
-            user_id: 4
+            user_id: 4,
+            song_id: 69
           }
         },done)
         .expect('Content-Type', /json/)
-        .end((httpErr, _res) => {
-
-        if (httpErr) {
-          return done(httpErr);
-        }
-
-        knex('songs')
-          .where('id', 69)
-          .first()
-          .then((song) => {
-
-            delete song.created_at;
-            delete song.updated_at;
-
-            assert.deepEqual(song,
-              {
-                id: 69,
-                song: '21 Questions',
-                artist: '50 Cent'
-              });
-            done();
-          })
-        });
-  });
+    });
 });
 
 
@@ -189,14 +166,14 @@ describe('DELETE /users/{id}/playlist/songs/{sid}', () => {
       supertest(app)
         .delete('/users/4/playlist/songs/14')
         .set('Accept', 'application/json')
-        .expect(204, {
+        .expect(200, {
           song: {
             song_name: ' Falling in Love With You',
             artist: ' UB-40'
           },
           playlist: {
-            song_id: 14,
-            user_id: 4
+            user_id: 4,
+            song_id: 14
           }
         }, done);
     });

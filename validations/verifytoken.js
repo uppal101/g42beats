@@ -7,7 +7,7 @@ function verifyToken(req, res, next) {
           if (err) {
     				return res.status(401).json('Failed to authenticate token.');
     			} else {
-    				req.body.userId = payload.userId;
+    				req.params.userId = payload.userId;
     				next();
     			}
     		});
@@ -15,7 +15,6 @@ function verifyToken(req, res, next) {
     		return res.status(401).json('No token provided.')
       }
 }
-
 
 module.exports = {
   verifyToken: verifyToken
