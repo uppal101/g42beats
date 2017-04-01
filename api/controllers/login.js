@@ -9,7 +9,6 @@ const {
 } = require('humps');
 
 function userSignIn(req, res, next) {
-  //   console.log(req);
   let user
   knex('users')
     .where('user_name', req.body.username)
@@ -23,7 +22,6 @@ function userSignIn(req, res, next) {
       }
     })
     .then((signedIn) => {
-      // console.log(user);
       const claim = {
         userId: user.id,
       }

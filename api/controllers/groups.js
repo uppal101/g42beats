@@ -1,4 +1,4 @@
-//DATABASE WE WILL NEED
+
 const knex = require('../../knex');
 const bcrypt = require('bcrypt-as-promised');
 const jwt = require('jsonwebtoken');
@@ -25,7 +25,6 @@ function getGroupCompiledPlaylist(req, res){
     .select()
     .where('groups.id', groupId)
     .then(providedGp => {
-        // console.log(providedGp);
       if(!providedGp){
         res.status(404).json('Not Found');
       } else {
@@ -53,9 +52,6 @@ function getGroupCompiledPlaylist(req, res){
     })
 }
 
-//need to make sure that this function returns an array of users that
-//belong to a group.
-//so far this returns an empty array.
 function getUsersInGroup(req, res){
   let groupId = req.swagger.params.gid.value;
 
@@ -65,8 +61,6 @@ function getUsersInGroup(req, res){
   .select()
   .where('group_name', groupId)
   .then(usersInGroup => {
-    // console.log(usersInGroup.id)
-    // console.log("this is where the groupsId should be");;
     res.status(200).json(usersInGroup);
   })
   .catch(err => {
@@ -74,11 +68,6 @@ function getUsersInGroup(req, res){
   })
 }
 
-// function getSingleUserInGroup(req, res) {
-//   let user = req.swagger.params.id.value;
-//   //what is the reason for having the         gid and the user id.
-//   //how is this supposed to be used in the route.
-// }
 
 
 module.exports ={
