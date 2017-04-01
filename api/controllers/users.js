@@ -66,12 +66,17 @@ function getUserPlaylistByUserId(req, res) {
       return Promise.all(spotifyRequests)
     })
     .then(function(spotifyResponses) {
-      //  console.log('afterRESPONSES',spotifyResponses);
-      let urlToSend = spotifyResponses.map(function(song) {
-        let parsedSong = JSON.parse(song);
-        return parsedSong.tracks.items[0];
-      });
-
+       let parsedResponse = spotifyResponses.map(function(album) {
+         if(album === undefined){
+           return "preview url not found";
+         }
+          return JSON.parse(album).tracks.items;
+          });
+        let urlsArr = parsedResponse.map(function(ele){
+          return ele[0].preview_url;
+        })
+        res.status(200);
+        res.send(urlsArr);
     })
     .catch((err) => {
       console.error(err);
