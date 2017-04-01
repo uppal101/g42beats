@@ -87,21 +87,11 @@ describe('GET /users/{id}/playlist', () => {
       supertest(app)
         .get('/users/1/playlist')
         .set('Accept', 'application/json')
-        .expect(200, [{
-          preview_url: "https://p.scdn.co/mp3-preview/6ece6ef8b0c879c99b97901c7897f32b0dd54fbd?cid=null"
-        },
-        {
-          preview_url: "https://p.scdn.co/mp3-preview/177e9f1ac16201637073d95584df1883efe9d18d?cid=null"
-        },
-        {
-          preview_url: "https://p.scdn.co/mp3-preview/fc933abfb501eb58d5efa54d0ce86f3746dc7ffc?cid=null"
-        },
-        {
-          preview_url:"https://p.scdn.co/mp3-preview/8edfb217d198d54899ee5f8cedc743b1547dc20e?cid=null"
-        },
-        {
-          preview_url:"https://p.scdn.co/mp3-preview/4f92a6f5c14c970cb1dad3706391edf5c436eadf?cid=null"
-        }
+        .expect(200, [ "https://p.scdn.co/mp3-preview/6ece6ef8b0c879c99b97901c7897f32b0dd54fbd?cid=null",
+        "https://p.scdn.co/mp3-preview/177e9f1ac16201637073d95584df1883efe9d18d?cid=null",
+        "https://p.scdn.co/mp3-preview/fc933abfb501eb58d5efa54d0ce86f3746dc7ffc?cid=null",
+        "https://p.scdn.co/mp3-preview/8edfb217d198d54899ee5f8cedc743b1547dc20e?cid=null",
+        "https://p.scdn.co/mp3-preview/4f92a6f5c14c970cb1dad3706391edf5c436eadf?cid=null"
       ], done);
     });
 
