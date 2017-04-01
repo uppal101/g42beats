@@ -161,19 +161,19 @@ describe('POST /users/{id}/playlist/songs', () => {
 });
 
 
-xdescribe('DELETE /users/{id}/playlist/songs/{sid}', () => {
+describe('DELETE /users/{id}/playlist/songs/{sid}', () => {
     it('should allow authorized user to delete a song off their personal playlist', (done) => {
       supertest(app)
         .delete('/users/4/playlist/songs/14')
         .set('Accept', 'application/json')
-        .expect(204, {
+        .expect(200, {
           song: {
             song_name: ' Falling in Love With You',
             artist: ' UB-40'
           },
           playlist: {
-            song_id: 14,
-            user_id: 4
+            user_id: 4,
+            song_id: 14
           }
         }, done);
     });

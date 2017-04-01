@@ -33,6 +33,11 @@ paths:
         required: true
         type: integer
         format: int64
+      # - name: token
+      #   in: header
+      #   required: true
+      #   type: string
+      #   format: string
       responses:
         "200":
           description: Welcome authorized user successfully

@@ -175,19 +175,38 @@ function addSong(req, res) {
 function deleteSong(req, res) {
   let userId = req.swagger.params.id.value;
   let songId = req.swagger.params.sid.value;
-  let songToDelete;
+  let playlistToDelete
 
   knex('playlist')
     .select()
     .where('user_id', userId)
     .where('song_id', songId)
     .first()
-    .then((toBeDeleted) => {
-      console.log(tobeDeleted);
-      songToDelete = tobeDeleted;
+    .then((playlistAssociation) => {
+      playlistToDelete = playlistAssociation;
+      delete playlistToDelete.created_at;
+      delete playlistToDelete.updated_at;
+      delete playlistToDelete.id;
+      // console.log(playlistToDelete);
     })
     .then(() => {
-      res.send(songToDelete);
+      return knex('songs')
+      .select()
+      .where('id', songId)
+      .first()
+    })
+    .then((song) => {
+      delete song.created_at;
+      delete song.updated_at;
+      delete song.id;
+      return song
+    })
+    .then((song) => {
+      console.log(song, playlistToDelete);
+      res.send(200, {
+        song: song,
+        playlist: playlistToDelete
+      });
     })
     .catch((err) => {
       console.error(err);
