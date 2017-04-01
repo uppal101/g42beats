@@ -8,44 +8,44 @@ const formatSongs = require('./apicallFormat').formatSongs;
 const rp = require('request-promise');
 const dotenv = require('dotenv').config();
 const {
-    camelizeKeys,
-    decamelizeKeys
+  camelizeKeys,
+  decamelizeKeys
 } = require('humps');
 
 //Ivonne
- function userById(req, res) {
-   let paramId = req.swagger.params.id.value;
-   knex('users')
-   .where('id', paramId)
-   .then(user=> {
-     if(!user) {
-       res.status(404).json('Not Found');
-     } else {
-       delete user[0].hashed_password;
-       delete user[0].created_at;
-       delete user[0].updated_at;
-     }
-     res.status(200).json(user);
-   })
-   .catch(err => {
-     console.error(err);
-   });
+function userById(req, res) {
+  let paramId = req.swagger.params.id.value;
+  knex('users')
+    .where('id', paramId)
+    .then(user => {
+      if (!user) {
+        res.status(404).json('Not Found');
+      } else {
+        delete user[0].hashed_password;
+        delete user[0].created_at;
+        delete user[0].updated_at;
+      }
+      res.status(200).json(user);
+    })
+    .catch(err => {
+      console.error(err);
+    });
 }
 
 // grab user playlist Ivonne
-function getUserPlaylistByUserId(req, res){
+function getUserPlaylistByUserId(req, res) {
   let formatedSongs;
   let userId = req.swagger.params.id.value;
   knex('users')
-  .join('playlist','users.id', '=', 'playlist.user_id')
-  .join('songs', 'playlist.song_id', '=', 'songs.id')
-  .select()
-  .where('user_id', userId)
+    .join('playlist', 'users.id', '=', 'playlist.user_id')
+    .join('songs', 'playlist.song_id', '=', 'songs.id')
+    .select()
+    .where('user_id', userId)
     .then((usersongs) => {
-      if(!usersongs){
+      if (!usersongs) {
         res.status(404).json('Not Found');
       } else {
-         formatedSongs = usersongs.map(function(object){
+        formatedSongs = usersongs.map(function(object) {
           delete object.hashed_password;
           delete object.song_id;
           delete object.updated_at;
@@ -61,21 +61,21 @@ function getUserPlaylistByUserId(req, res){
       return formatedSongs;
     })
 
-    .then(function(songObjects){
-      let spotifyRequests = songObjects.map(function(songObj){
+    .then(function(songObjects) {
+      let spotifyRequests = songObjects.map(function(songObj) {
         //return the request-promise module api call
         return rp(`https://api.spotify.com/v1/search?q=${songObj.song_name}%20artist:${songObj.artist}&type=track`);
-        console.log('This is the array of responses', spotifyRequests);
+        // console.log('This is the array of responses', spotifyRequests);
       })
-console.log('this are the requests', spotifyRequests);
+      // console.log('this are the requests', spotifyRequests);
       return Promise.all(spotifyRequests)
     })
     .then(function(spotifyResponses) {
-       console.log('afterRESPONSES',spotifyResponses);
-       let urlToSend = spotifyResponses.map(function(song){
+      //  console.log('afterRESPONSES',spotifyResponses);
+      let urlToSend = spotifyResponses.map(function(song) {
         let parsedSong = JSON.parse(song);
-          return parsedSong.tracks.items[0];
-       });
+        return parsedSong.tracks.items[0];
+      });
       //  console.log(urlToSend);
       // send back the relevant stuff
       //itereate throught the array of resolved promises that will need to
@@ -92,14 +92,14 @@ console.log('this are the requests', spotifyRequests);
 //   knex('oups')
 // }
 
-function getGroupsPerUser(req, res){
+function getGroupsPerUser(req, res) {
   let userId = req.swagger.params.id.value;
   knex('groups')
-  .join('group_members','groups.id', '=', 'group_members.group_id')
-  .select()
-  .where('user_id', userId)
+    .join('group_members', 'groups.id', '=', 'group_members.group_id')
+    .select()
+    .where('user_id', userId)
     .then((userGroups) => {
-      if(!userGroups){
+      if (!userGroups) {
         res.status(404).json('Not Found');
       } else {
         delete userGroups[0].created_at;
@@ -121,49 +121,51 @@ function addSong(req, res) {
   let songName = req.body.song;
   let artistName = req.body.artist;
   let userId = req.swagger.params.id.value;
+  let song
 
   knex('songs')
-  .select()
-  .where('song_name', songName)
-  .where('artist', artistName)
-  .first()
-  .then((song) => {
-    if(song){
-      let data = {
-         song_id: song.id,
-         user_id: userId
+    .select()
+    .where('song_name', songName)
+    .where('artist', artistName)
+    .first()
+    .then((song) => {
+      if (song) {
+        let data = {
+          song_id: song.id,
+          user_id: userId
         }
-      knex('playlist')
-     .insert(data,'*')
-      .then(()=> {
-        res.send(200, data);
-      })
-    } else {
-      knex('songs')
-      .insert({
-        song_name: songName,
-        artist: artistName
-      }, '*')
-      .then((songToAdd) => {
         knex('playlist')
-        .insert({
-          user_id: userId,
-          song_id: songToAdd[0].id
-        }, '*')
-        return songToAdd;
-      })
-      .then((songToAdd)=> {
-          delete songToAdd.created_at;
-          delete songToAdd.updated_at;
-            res.send(200, songToAdd);
-        })
-    }
-  })
-  .then((addedSong) => {
-    console.log(addedSong);
-
-  })
-  .catch((err) => {
+          .insert(data, '*')
+          .then((playlistResult) => {
+            res.send(200, data);
+          })
+      } else {
+        knex('songs')
+          .insert({
+            song_name: songName,
+            artist: artistName
+          }, '*')
+          .then((songToAdd) => {
+            song = songToAdd[0]
+            return knex('playlist')
+              .insert({
+                user_id: userId,
+                song_id: songToAdd[0].id
+              }, '*')
+          })
+          .then((playlistArray) => {
+            delete song.created_at;
+            delete song.updated_at;
+            delete playlistArray[0].created_at;
+            delete playlistArray[0].updated_at;
+            res.send(200, {
+              song: song,
+              playlist: playlistArray[0]
+            });
+          });
+      }
+    })
+    .catch((err) => {
     console.error(err);
   })
 }
@@ -172,10 +174,10 @@ function addSong(req, res) {
 //NOT WORKing
 function deleteSong(req, res) {
   let userId = req.swagger.params.id.value;
-  let songId =req.swagger.params.sid.value;
+  let songId = req.swagger.params.sid.value;
   let songToDelete;
 
-    knex('playlist')
+  knex('playlist')
     .select()
     .where('user_id', userId)
     .where('song_id', songId)
@@ -184,10 +186,10 @@ function deleteSong(req, res) {
       console.log(tobeDeleted);
       songToDelete = tobeDeleted;
     })
-    .then(()=> {
+    .then(() => {
       res.send(songToDelete);
     })
-    .catch((err)=> {
+    .catch((err) => {
       console.error(err);
     })
 }
@@ -216,11 +218,11 @@ function deleteSong(req, res) {
 //   };
 // }
 
-        module.exports ={
-            userById: userById,
-            getUserPlaylistByUserId: getUserPlaylistByUserId,
-            getGroupsPerUser: getGroupsPerUser,
-            addSong: addSong,
-            deleteSong: deleteSong
-            // getGroupCompiledPlaylist: getGroupCompiledPlaylist
-        }
+module.exports = {
+  userById: userById,
+  getUserPlaylistByUserId: getUserPlaylistByUserId,
+  getGroupsPerUser: getGroupsPerUser,
+  addSong: addSong,
+  deleteSong: deleteSong
+  // getGroupCompiledPlaylist: getGroupCompiledPlaylist
+}
