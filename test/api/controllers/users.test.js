@@ -56,7 +56,7 @@ const bcrypt = require('bcrypt');
 describe('GET users/{id}', () => {
     it('should respond with user information with the specified id', (done) => {
       supertest(app)
-        .get('/users/1')
+        .get('/api/users/1')
         .set('Accept', 'application/json')
         .expect(200, [{
           id: 1,
@@ -66,14 +66,14 @@ describe('GET users/{id}', () => {
 
     it('should respond with 404 if user enters incorrect parameter', (done) => {
       supertest(app)
-      .get('/users/hkhjk')
+      .get('/api/users/hkhjk')
       .set('Accept', 'Application/json')
       .expect(404, JSON.stringify({code:404, message: "please enter valid information"}, done));
     });
 
     it('should respond with user information with the specified id', (done) => {
       supertest(app)
-        .get('/users/4')
+        .get('/api/users/4')
         .set('Accept', 'application/json')
         .expect([{
           id: 4,
@@ -85,7 +85,7 @@ describe('GET users/{id}', () => {
 describe('GET /users/{id}/playlist', () => {
     it("should respond with user's personal playlist that is associated with the specified id", (done) => {
       supertest(app)
-        .get('/users/1/playlist')
+        .get('/api/users/1/playlist')
         .set('Accept', 'application/json')
         .expect(200, [ "https://p.scdn.co/mp3-preview/6ece6ef8b0c879c99b97901c7897f32b0dd54fbd?cid=null",
         "https://p.scdn.co/mp3-preview/177e9f1ac16201637073d95584df1883efe9d18d?cid=null",
@@ -97,7 +97,7 @@ describe('GET /users/{id}/playlist', () => {
 
     it('should respond with 404 if song enters incorrect parameter', (done) => {
       supertest(app)
-      .get('/users/hkhjk')
+      .get('/api/users/hkhjk')
       .set('Accept', 'Application/json')
       .expect(404, JSON.stringify({code:404, message: "please enter valid information"}, done));
     });
@@ -106,7 +106,7 @@ describe('GET /users/{id}/playlist', () => {
 describe('GET /users/{id}/groups_members', () => {
     it('should get all groups that belong to a certain user', (done) => {
       supertest(app)
-        .get('/users/5/groups_members')
+        .get('/api/users/5/groups_members')
         .set('Accept', 'application/json')
         .expect(200, [{
           group_name: 'g42'
@@ -114,7 +114,7 @@ describe('GET /users/{id}/groups_members', () => {
     });
     it('should respond with 404 if user enters incorrect parameter', (done) => {
       supertest(app)
-      .get('/users/hkhjk/groups_members')
+      .get('/api/users/hkhjk/groups_members')
       .set('Accept', 'Application/json')
       .expect(404, JSON.stringify({code:404, message: "please enter valid information"}, done));
     });
@@ -124,7 +124,7 @@ describe('GET /users/{id}/groups_members', () => {
 describe('POST /users/{id}/playlist/songs', () => {
     it('allows authorized user to add song to their personal playlist', (done) => {
       supertest(app)
-        .post('/users/4/playlist/songs')
+        .post('/api/users/4/playlist/songs')
         .set('Accept', 'application/json')
         .send({
           song: '21 Questions',
@@ -154,7 +154,7 @@ describe('POST /users/{id}/playlist/songs', () => {
 describe('DELETE /users/{id}/playlist/songs/{sid}', () => {
     it('should allow authorized user to delete a song off their personal playlist', (done) => {
       supertest(app)
-        .delete('/users/4/playlist/songs/14')
+        .delete('/api/users/4/playlist/songs/14')
         .set('Accept', 'application/json')
         .expect(200, {
           song: {

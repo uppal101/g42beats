@@ -50,7 +50,7 @@ describe('POST /users', () => {
     const password = 'thegivenbySanjeet';
 
     supertest(app)
-      .post('/users')
+      .post('/api/users')
       .set('Accept', 'application/json')
       .set('Content-Type', 'application/json')
       .send({
@@ -109,7 +109,7 @@ let token = '';
 describe('POST users/login', () => {
   it('should create and send a token', (done) => {
     supertest(app)
-      .post('/users/login')
+      .post('/api/users/login')
       .set('Accept', 'application/json')
       .set('Content-Type', 'application/json')
       .send({

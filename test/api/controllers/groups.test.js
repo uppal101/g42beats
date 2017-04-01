@@ -46,7 +46,7 @@ beforeEach((done) => {
 describe('GET groups/{gid}/group_members/playlist', () => {
     it('should get compiled playlist associated with group', (done) => {
       supertest(app)
-        .get('groups/1/group_members/playlist')
+        .get('/api/groups/1/group_members/playlist')
         .set('Accept', 'application/json')
         .expect(200, [ "https://p.scdn.co/mp3-preview/6ece6ef8b0c879c99b97901c7897f32b0dd54fbd?cid=null",
          "https://p.scdn.co/mp3-preview/177e9f1ac16201637073d95584df1883efe9d18d?cid=null",
