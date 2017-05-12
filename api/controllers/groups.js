@@ -1,33 +1,34 @@
 
-const knex = require('../../knex');
-const bcrypt = require('bcrypt-as-promised');
-const jwt = require('jsonwebtoken');
-const cookieParser = require('cookie-parser');
-const dotenv = require('dotenv').config();
-const rp = require('request-promise');
-const formatSongs = require('./apicallFormat').formatSongs;
+const knex = require("../../knex");
+const bcrypt = require("bcrypt-as-promised");
+const jwt = require("jsonwebtoken");
+const cookieParser = require("cookie-parser");
+const dotenv = require("dotenv").config();
+const rp = require("request-promise");
+const formatSongs = require("./apicallFormat").formatSongs;
 const {
     camelizeKeys,
     decamelizeKeys
-} = require('humps');
+} = require("humps");
 
-/// MVP
+// / MVP
 
-function getGroupCompiledPlaylist(req, res){
+// would like to see comments above each function.
+function getGroupCompiledPlaylist(req, res) {
   let formatedSongs;
-    let groupId = req.swagger.params.gid.value;
-    knex('groups')
-    .join('group_members', 'groups.id', '=', 'group_members.group_id')
-    .join('users', 'group_members.user_id', '=', 'users.id')
-    .join('playlist', 'users.id', '=', 'playlist.user_id')
-    .join('songs', 'playlist.song_id', '=', 'songs.id')
+  const groupId = req.swagger.params.gid.value;
+  knex("groups")
+    .join("group_members", "groups.id", "=", "group_members.group_id")
+    .join("users", "group_members.user_id", "=", "users.id")
+    .join("playlist", "users.id", "=", "playlist.user_id")
+    .join("songs", "playlist.song_id", "=", "songs.id")
     .select()
-    .where('groups.id', groupId)
-    .then(providedGp => {
-      if(!providedGp){
-        res.status(404).json('Not Found');
+    .where("groups.id", groupId)
+    .then((providedGp) => {
+      if (!providedGp) {
+        res.status(404).json("Not Found");
       } else {
-      formatedSongs =  providedGp.map(function(obj) {
+        formatedSongs = providedGp.map((obj) => {
           delete obj.hashed_password;
           delete obj.song_id;
           delete obj.updated_at;
@@ -41,55 +42,52 @@ function getGroupCompiledPlaylist(req, res){
           return obj;
         });
       }
-      let urlReadySongs = formatSongs(formatedSongs)
+      const urlReadySongs = formatSongs(formatedSongs);
       return formatedSongs;
     })
-    .then(function(songObjects){
-      let spotifyRequests = songObjects.map(function(songObj){
-        //return the request-promise module api call
-        return rp(`https://api.spotify.com/v1/search?q=${songObj.song_name}%20artist:${songObj.artist}&type=track`);
-      })
-      return Promise.all(spotifyRequests)
+    .then((songObjects) => {
+      const spotifyRequests = songObjects.map(songObj =>
+        // return the request-promise module api call
+         rp(`https://api.spotify.com/v1/search?q=${songObj.song_name}%20artist:${songObj.artist}&type=track`));
+      return Promise.all(spotifyRequests);
     })
-    .then(function(spotifyResponses) {
-       let parsedResponse = spotifyResponses.map(function(album) {
-         //include if album not found return "preview url not found" else return url.
-          if(!album){
-            return "preview url not found";
-          }
-            return JSON.parse(album).tracks.items;
-          });
-        let urlsArr = parsedResponse.map(function(ele){
-          return ele[0].preview_url;
-        })
-        res.status(200);
-        res.send(urlsArr);
+    .then((spotifyResponses) => {
+      const parsedResponse = spotifyResponses.map((album) => {
+         // include if album not found return "preview url not found" else return url.
+        if (!album) {
+          return "preview url not found";
+        }
+        return JSON.parse(album).tracks.items;
+      });
+      const urlsArr = parsedResponse.map(ele => ele[0].preview_url);
+      res.status(200);
+      res.send(urlsArr);
     })
     .catch((err) => {
       console.error(err);
-    })
+    });
 }
 
-function getUsersInGroup(req, res){
-  let groupId = req.swagger.params.gid.value;
+// would like to see comments above each function.
+function getUsersInGroup(req, res) {
+  const groupId = req.swagger.params.gid.value;
 
-  knex('groups')
-  .join('group_members', 'groups.id', '=', 'group_members.group_id')
-  .join('users', 'group_members.user_id', '=', 'users.id')
+  knex("groups")
+  .join("group_members", "groups.id", "=", "group_members.group_id")
+  .join("users", "group_members.user_id", "=", "users.id")
   .select()
-  .where('group_name', groupId)
-  .then(usersInGroup => {
+  .where("group_name", groupId)
+  .then((usersInGroup) => {
     res.status(200).json(usersInGroup);
   })
-  .catch(err => {
+  .catch((err) => {
     console.error(err);
-  })
+  });
 }
 
 
-
-module.exports ={
-    getUsersInGroup: getUsersInGroup,
-    getGroupCompiledPlaylist: getGroupCompiledPlaylist
+module.exports = {
+  getUsersInGroup,
+  getGroupCompiledPlaylist
     // getGroupCompiledPlaylist: getGroupCompiledPlaylist
-}
+};
