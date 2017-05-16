@@ -11,12 +11,13 @@ const auth = require('./validations/verifytoken.js');
 var config = {
   appRoot: __dirname // required config
 };
- apps.use(express.static(path.join('public')));
+ app.use(express.static(path.join('public')));
  app.use(cors());
 
  var config = {
    appRoot: __dirname
  };
+ 
 // app.use('/groups', auth.verifyToken);
 //
 // app.use('/users', auth.verifyToken);
