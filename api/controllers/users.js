@@ -1,24 +1,25 @@
-'use strict';
 
-const knex = require('../../knex');
-const bcrypt = require('bcrypt-as-promised');
-const jwt = require('jsonwebtoken');
-const cookieParser = require('cookie-parser');
-const formatSongs = require('./apicallFormat').formatSongs;
-const rp = require('request-promise');
-const dotenv = require('dotenv').config();
+
+const knex = require("../../knex");
+const bcrypt = require("bcrypt-as-promised");
+const jwt = require("jsonwebtoken");
+const cookieParser = require("cookie-parser");
+const formatSongs = require("./apicallFormat").formatSongs;
+const rp = require("request-promise");
+const dotenv = require("dotenv").config();
 const {
   camelizeKeys,
   decamelizeKeys
-} = require('humps');
+} = require("humps");
 
+// would like to see comments above each function.
 function userById(req, res) {
-  let paramId = req.swagger.params.id.value;
-  knex('users')
-    .where('id', paramId)
-    .then(user => {
+  const paramId = req.swagger.params.id.value;
+  knex("users")
+    .where("id", paramId)
+    .then((user) => {
       if (!user) {
-        res.status(404).json('Not Found');
+        res.status(404).json("Not Found");
       } else {
         delete user[0].hashed_password;
         delete user[0].created_at;
@@ -26,24 +27,25 @@ function userById(req, res) {
       }
       res.status(200).json(user);
     })
-    .catch(err => {
+    .catch((err) => {
       console.error(err);
     });
 }
 
+// would like to see comments above each function.
 function getUserPlaylistByUserId(req, res) {
   let formatedSongs;
-  let userId = req.swagger.params.id.value;
-  knex('users')
-    .join('playlist', 'users.id', '=', 'playlist.user_id')
-    .join('songs', 'playlist.song_id', '=', 'songs.id')
+  const userId = req.swagger.params.id.value;
+  knex("users")
+    .join("playlist", "users.id", "=", "playlist.user_id")
+    .join("songs", "playlist.song_id", "=", "songs.id")
     .select()
-    .where('user_id', userId)
+    .where("user_id", userId)
     .then((usersongs) => {
       if (!usersongs) {
-        res.status(404).json('Not Found');
+        res.status(404).json("Not Found");
       } else {
-        formatedSongs = usersongs.map(function(object) {
+        formatedSongs = usersongs.map((object) => {
           delete object.hashed_password;
           delete object.song_id;
           delete object.updated_at;
@@ -55,45 +57,41 @@ function getUserPlaylistByUserId(req, res) {
           return object;
         });
       }
-      let urlReadySongs = formatSongs(formatedSongs)
+      const urlReadySongs = formatSongs(formatedSongs);
       return formatedSongs;
     })
 
-    .then(function(songObjects) {
-      let spotifyRequests = songObjects.map(function(songObj) {
-        return rp(`https://api.spotify.com/v1/search?q=${songObj.song_name}%20artist:${songObj.artist}&type=track`);
-      })
-      return Promise.all(spotifyRequests)
+    .then((songObjects) => {
+      const spotifyRequests = songObjects.map(songObj => rp(`https://api.spotify.com/v1/search?q=${songObj.song_name}%20artist:${songObj.artist}&type=track`));
+      return Promise.all(spotifyRequests);
     })
-    .then(function(spotifyResponses) {
-       let parsedResponse = spotifyResponses.map(function(album) {
-         if(album === undefined){
-           return "preview url not found";
-         }
-          return JSON.parse(album).tracks.items;
-          });
-        let urlsArr = parsedResponse.map(function(ele){
-          return ele[0].preview_url;
-        })
-        res.status(200);
-        res.send(urlsArr);
+    .then((spotifyResponses) => {
+      const parsedResponse = spotifyResponses.map((album) => {
+        if (album === undefined) {
+          return "preview url not found";
+        }
+        return JSON.parse(album).tracks.items;
+      });
+      const urlsArr = parsedResponse.map(ele => ele[0].preview_url);
+      res.status(200);
+      res.send(urlsArr);
     })
     .catch((err) => {
       console.error(err);
-    })
+    });
 }
 
 
-
+// would like to see comments above each function.
 function getGroupsPerUser(req, res) {
-  let userId = req.swagger.params.id.value;
-  knex('groups')
-    .join('group_members', 'groups.id', '=', 'group_members.group_id')
+  const userId = req.swagger.params.id.value;
+  knex("groups")
+    .join("group_members", "groups.id", "=", "group_members.group_id")
     .select()
-    .where('user_id', userId)
+    .where("user_id", userId)
     .then((userGroups) => {
       if (!userGroups) {
-        res.status(404).json('Not Found');
+        res.status(404).json("Not Found");
       } else {
         delete userGroups[0].created_at;
         delete userGroups[0].updated_at;
@@ -105,45 +103,46 @@ function getGroupsPerUser(req, res) {
     })
     .catch((err) => {
       console.error(err);
-    })
+    });
 }
 
+// would like to see comments above each function.
 function addSong(req, res) {
-  let userName = req.body.user_name;
-  let songName = req.body.song;
-  let artistName = req.body.artist;
-  let userId = req.swagger.params.id.value;
-  let song
+  const userName = req.body.user_name;
+  const songName = req.body.song;
+  const artistName = req.body.artist;
+  const userId = req.swagger.params.id.value;
+  let song;
 
-  knex('songs')
+  knex("songs")
     .select()
-    .where('song_name', songName)
-    .where('artist', artistName)
+    .where("song_name", songName)
+    .where("artist", artistName)
     .first()
     .then((song) => {
       if (song) {
-        let data = {
+        const data = {
           song_id: song.id,
           user_id: userId
-        }
-        knex('playlist')
-          .insert(data, '*')
+        };
+        knex("playlist")
+          .insert(data, "*")
           .then((playlistResult) => {
             res.send(200, data);
-          })
+          });
       } else {
-        knex('songs')
+        knex("songs")
           .insert({
             song_name: songName,
             artist: artistName
-          }, '*')
+          }, "*")
           .then((songToAdd) => {
-            song = songToAdd[0]
-            return knex('playlist')
+            song = songToAdd[0];
+            return knex("playlist")
               .insert({
                 user_id: userId,
                 song_id: songToAdd[0].id
-              }, '*')
+              }, "*");
           })
           .then((playlistArray) => {
             delete song.created_at;
@@ -151,27 +150,28 @@ function addSong(req, res) {
             delete playlistArray[0].created_at;
             delete playlistArray[0].updated_at;
             res.send(200, {
-              song: song,
+              song,
               playlist: playlistArray[0]
             });
           });
       }
     })
     .catch((err) => {
-    console.error(err);
-  })
+      console.error(err);
+    });
 }
 
 
+// would like to see comments above each function.
 function deleteSong(req, res) {
-  let userId = req.swagger.params.id.value;
-  let songId = req.swagger.params.sid.value;
-  let playlistToDelete
+  const userId = req.swagger.params.id.value;
+  const songId = req.swagger.params.sid.value;
+  let playlistToDelete;
 
-  knex('playlist')
+  knex("playlist")
     .select()
-    .where('user_id', userId)
-    .where('song_id', songId)
+    .where("user_id", userId)
+    .where("song_id", songId)
     .first()
     .then((playlistAssociation) => {
       playlistToDelete = playlistAssociation;
@@ -180,35 +180,33 @@ function deleteSong(req, res) {
       delete playlistToDelete.id;
       // console.log(playlistToDelete);
     })
-    .then(() => {
-      return knex('songs')
+    .then(() => knex("songs")
       .select()
-      .where('id', songId)
-      .first()
-    })
+      .where("id", songId)
+      .first())
     .then((song) => {
       delete song.created_at;
       delete song.updated_at;
       delete song.id;
-      return song
+      return song;
     })
     .then((song) => {
       res.send(200, {
-        song: song,
+        song,
         playlist: playlistToDelete
       });
     })
     .catch((err) => {
       console.error(err);
-    })
+    });
 }
 
 
 module.exports = {
-  userById: userById,
-  getUserPlaylistByUserId: getUserPlaylistByUserId,
-  getGroupsPerUser: getGroupsPerUser,
-  addSong: addSong,
-  deleteSong: deleteSong
+  userById,
+  getUserPlaylistByUserId,
+  getGroupsPerUser,
+  addSong,
+  deleteSong
   // getGroupCompiledPlaylist: getGroupCompiledPlaylist
-}
+};
