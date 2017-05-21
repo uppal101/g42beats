@@ -11,9 +11,7 @@ const {
     decamelizeKeys
 } = require("humps");
 
-// / MVP
-
-// would like to see comments above each function.
+// gets all songs of users that belong in a group
 function getGroupCompiledPlaylist(req, res) {
   let formatedSongs;
   const groupId = req.swagger.params.gid.value;
@@ -68,7 +66,7 @@ function getGroupCompiledPlaylist(req, res) {
     });
 }
 
-// would like to see comments above each function.
+//grabs all usernames that belong to a group
 function getUsersInGroup(req, res) {
   const groupId = req.swagger.params.gid.value;
 
