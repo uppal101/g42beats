@@ -31,19 +31,6 @@ beforeEach((done) => {
     });
 });
 
-// afterEach(done => {
-//   knex.migrate.rollback()
-//   .then(() => done())
-//   .catch((err) => {
-//     done(err);
-//   });
-// });
-//
-// after(() => {
-//   knex.destroy()
-// })
-
-
 //test for right association in group members table as well
 describe('POST /users', () => {
   it('should create new user in database', (done) => {
@@ -123,17 +110,3 @@ describe('POST users/login', () => {
     done();
   })
 });
-
-// test('DELETE /favorites', (done) => {
-//     agent
-//       .delete('/favorites')
-//       .set('Accept', 'application/json')
-//       .set('Content-Type', 'application/json')
-//       .send({ bookId: 1 })
-//       .expect('Content-Type', /json/)
-//       .expect((res) => {
-//         delete res.body.createdAt;
-//         delete res.body.updatedAt;
-//       })
-//       .expect(200, { bookId: 1, userId: 1 }, done);
-//   });

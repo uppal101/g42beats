@@ -31,17 +31,6 @@ beforeEach((done) => {
     });
 });
 
-// afterEach(done => {
-//   knex.migrate.rollback()
-//   .then(() => done())
-//   .catch((err) => {
-//     done(err);
-//   });
-// });
-//
-// after(() => {
-//   knex.destroy()
-// })
 
 describe('GET groups/{gid}/group_members/playlist', () => {
     it('should get compiled playlist associated with group', (done) => {
