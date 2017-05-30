@@ -17,6 +17,7 @@ var config = {
  var config = {
    appRoot: __dirname
  };
+ 
 // app.use('/groups', auth.verifyToken);
 //
 // app.use('/users', auth.verifyToken);

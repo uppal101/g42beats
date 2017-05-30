@@ -8,7 +8,7 @@ const {
   decamelizeKeys
 } = require("humps");
 
-// would like to see comments above each function.
+//Gives a user a token upon successful sign in
 function userSignIn(req, res, next) {
   let user;
   knex("users")
@@ -36,7 +36,6 @@ function userSignIn(req, res, next) {
         user_name: user.user_name,
         token: user.token
       };
-      console.log(authorizedUser);
       res.status(200).send(authorizedUser);
     })
     .catch((err) => {
@@ -44,7 +43,7 @@ function userSignIn(req, res, next) {
     });
 }
 
-// would like to see comments above each function.
+//Allows a user to sign up and creates their association in the group members table
 function createUser(req, res, next) {
   let newUser;
   bcrypt.hash(req.body.password, 12)
@@ -59,7 +58,7 @@ function createUser(req, res, next) {
       delete newUser.hashed_password;
       delete newUser.created_at;
       delete newUser.updated_at;
-
+      //grab group id for group name entered during sign up to create group member association in next then block
       return knex("groups").where("group_name", req.body.group_name).select("id").first();
     })
     .then(group => knex("group_members").insert({

@@ -10,9 +10,6 @@ const app = require('../../../app');
 const bcrypt = require('bcrypt');
 
 
-
-
-
   // `before` runs once before all tests in a describe
   before((done) => {
     knex.migrate.rollback()
@@ -38,21 +35,7 @@ const bcrypt = require('bcrypt');
       });
   });
 
-  // afterEach(done => {
-  //   knex.migrate.rollback()
-  //   .then(() => done())
-  //   .catch((err) => {
-  //     done(err);
-  //   });
-  // });
-  //
-  // after(() => {
-  //   knex.destroy()
-  // })
 
-    //starting to write tests Ivonne
-
-    //get a userByID
 describe('GET users/{id}', () => {
     it('should respond with user information with the specified id', (done) => {
       supertest(app)
