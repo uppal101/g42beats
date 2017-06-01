@@ -6,7 +6,7 @@ info:
 # during dev, should point to your local machine
 host: "localhost:10010"
 # basePath prefixes all resource paths
-basePath: "/api"
+basePath: "/"
 #
 schemes:
   # tip: remove http to make production-grade
@@ -100,123 +100,7 @@ paths:
           schema:
             $ref: "#/definitions/errorModel"
 
-  # /groups/{gid}/group_members/{id}/playlist:
-  #   x-swagger-router-controller: groups
-  #   get:
-  #     description: Returns the all the songs associated with a user in a group that the signed in user is a part of. The id is associated with the user whose playlist we are seeing.
-  #     operationId: getUserPlaylistByGroupIdandUserId
-  #     produces:
-  #     - application/json
-  #     parameters:
-  #     - name: gid
-  #       in: path
-  #       description: Produces an a list of users in the given group.
-  #       required: true
-  #       type: integer
-  #       format: int64
-  #     - name: id
-  #       in: path
-  #       description: Fetches the user associated with given user id.
-  #       required: true
-  #       type: integer
-  #       format: int64
-  #     responses:
-  #       "200":
-  #         description: Retrieved a user's playlist in a group that authorized user is part of.
-  #         schema:
-  #           type: array
-  #           items:
-  #             $ref: "#/definitions/song"
-  #       default:
-  #         description: unexpected error
-  #         schema:
-  #           $ref: "#/definitions/errorModel"
-
-  # /groups/{gid}/group_members/users:
-  #   x-swagger-router-controller: groups
-  #   get:
-  #     description: Gets all users that belong to a certain group.
-  #     operationId: getUsersInGroup
-  #     produces:
-  #     - application/json
-  #     parameters:
-  #     - name: gid
-  #       in: path
-  #       description: Return a group associated with that id
-  #       required: true
-  #       type: integer
-  #       format: int64
-  #     responses:
-  #       "200":
-  #         description: Got array of users in group
-  #         schema:
-  #           type: array
-  #           items:
-  #           $ref: "#/definitions/user"
-  #       default:
-  #         description: unexpected error
-  #         schema:
-  #           $ref: "#/definitions/errorModel"
-
-
-  # /groups/{gid}/group_members/users/{id}:
-
-  #   x-swagger-router-controller: groups
-  #   get:
-  #     description: Gets an individual user that belongs to a certain group.
-  #     operationId: getSingleUserInGroup
-  #     produces:
-  #     - application/json
-  #     parameters:
-  #     - name: gid
-  #       in: path
-  #       description: Return a group associated with that id
-  #       required: true
-  #       type: integer
-  #       format: int64
-  #     - name: id
-  #       in: path
-  #       description: Return an individual associated with that id
-  #       required: true
-  #       type: integer
-  #       format: int64
-  #     responses:
-  #       "200":
-  #         description: Got individual user
-  #         schema:
-  #           $ref: "#/definitions/user"
-  #       default:
-  #         description: unexpected error
-  #         schema:
-  #           $ref: "#/definitions/errorModel"
-
-  #   delete:
-  #     description: Delete an individual user that belongs to a certain group.
-  #     operationId: deleteSingleUserInGroup
-  #     produces:
-  #     - application/json
-  #     parameters:
-  #     - name: gid
-  #       in: path
-  #       description: Return a group associated with that id
-  #       required: true
-  #       type: integer
-  #       format: int64
-  #     - name: id
-  #       in: path
-  #       description: Return an individual associated with that id
-  #       required: true
-  #       type: integer
-  #       format: int64
-  #     responses:
-  #       "204":
-  #         description: Users deleted
-  #         schema:
-  #           $ref: "#/definitions/user"
-  #       default:
-  #         description: unexpected error
-  #         schema:
-  #           $ref: "#/definitions/errorModel"
+     # take out code that you're not using. You shouldn't have large blocks of comments in your code. 
 
 
   /users/{id}/groups_members:
