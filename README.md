@@ -1,6 +1,6 @@
 # g42beats
 
-Deployed site: https://ivonneq21-g42beats.herokuapp.com/
+Deployed site: https://ivonneq21-g42beats.herokuapp.com/api-docs/
 
 
 ### About g42beats
