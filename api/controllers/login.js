@@ -1,5 +1,5 @@
 const knex = require("../../knex");
-const bcrypt = require("bcrypt-as-promised");
+const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 const dotenv = require("dotenv").config();

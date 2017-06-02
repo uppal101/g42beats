@@ -2,7 +2,8 @@
 
 var SwaggerExpress = require('swagger-express-mw');
 const express = require('express');
-var app = require('express');
+var app = express()
+const path = require('path');
 const cors = require('cors');
 const auth = require('./validations/verifytoken.js');
 
@@ -11,13 +12,14 @@ const auth = require('./validations/verifytoken.js');
 var config = {
   appRoot: __dirname // required config
 };
- app.use(express.static(path.join('public')));
- app.use(cors());
 
- var config = {
-   appRoot: __dirname
- };
- 
+app.use(express.static(path.join('public')));
+app.use(cors());
+
+var config = {
+  appRoot: __dirname
+};
+
 // app.use('/groups', auth.verifyToken);
 //
 // app.use('/users', auth.verifyToken);
